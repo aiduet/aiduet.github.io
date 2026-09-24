@@ -1,6 +1,6 @@
-/* The sheet: one sheet of paper, margins held by --wp. Nothing else. The
-   whole page is a column that never exceeds the 9:16 plate's own width, so
-   on a wide screen the poster stays a poster instead of stretching. */
+/* The sheet: one sheet of paper, margins held by --wp. Nothing else. It is
+   a column that never exceeds a story frame's own proportions, so on a wide
+   screen the poster stays a poster instead of stretching. */
 
 * { box-sizing: border-box; }
 
@@ -17,7 +17,7 @@ body {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: var(--sp-10, 2.5rem) var(--wp);
+  padding: var(--sp-10) var(--wp);
   background: var(--paper);
   color: var(--ink);
   font-family: var(--geo);
@@ -31,68 +31,89 @@ body {
   flex-direction: column;
 }
 
-/* ── Plate ────────────────────────────────────────────────────────────────
-   The figure is the only thing with a hue on the page, so it gets the page's
-   one inset hairline and no second treatment. Aspect ratio is fixed to 9:16
-   to match a Story frame; the placeholder paint is a soft ume wash so the
-   layout can be judged before a photograph exists. */
+/* ── Eyebrow ──────────────────────────────────────────────────────────────
+   A catalogue mark, small and tracked out. It is the only uppercase line in
+   the header position, and the dots on the right are a story-frame nod, not
+   a control. */
 
-.plate {
-  position: relative;
-  margin: 0;
-  aspect-ratio: 9 / 16;
-  width: 100%;
-  overflow: hidden;
-  background: linear-gradient(170deg, #cfe8dc 0%, #a9d4c1 46%, #7cb99f 100%);
-  outline: var(--rule) solid var(--plate);
-  outline-offset: -1px;
-}
-
-.plate-ink {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(46% 26% at 62% 16%, oklch(1 0 0 / 0.5), transparent 62%),
-    radial-gradient(30% 40% at 30% 74%, oklch(0.42 0.09 160 / 0.34), transparent 66%);
-}
-
-.plate-ink::after {
-  /* A single trunk, drawn as a 3px vertical rule that stops short of the top.
-     The stem ends against the sky, not at the figure's edge — the placeholder
-     reads as a plate under a mat, not as a cropped photograph. One leaf mark,
-     not a decoration: the figure is meant to be a tree against sky. */
-  content: "";
-  position: absolute;
-  left: 62%;
-  top: 14%;
-  bottom: 12%;
-  width: 3px;
-  background: oklch(0.34 0.05 160 / 0.55);
-  border-radius: 2px;
-  transform: rotate(7deg);
-  transform-origin: top center;
-}
-
-.plate-cap {
-  position: absolute;
-  left: 0.75rem;
-  top: 0.75rem;
-  margin: 0;
+.eyebrow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-4);
   font-size: var(--f-cap);
   font-weight: 500;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: oklch(1 0 0 / 0.72);
+  color: var(--ink-3);
 }
 
-/* ── Stack: narrative left, symbol right ─────────────────────────────── */
+.eyebrow p { margin: 0; }
+
+/* ── Plate ────────────────────────────────────────────────────────────────
+   A landscape frame -- the photograph is the one colour field on the page, so
+   it gets the only inset hairline and no second treatment. Placeholder paint
+   is a soft ume wash; `background-image` on `.plate` replaces it whole. */
+
+.plate {
+  position: relative;
+  margin: 0;
+  aspect-ratio: var(--plate-r);
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(168deg, #a8cfe0 0%, #8dbdd6 42%, #cfe3d8 70%, #eef4e8 100%);
+  outline: var(--rule) solid oklch(0 0 0 / 0.1);
+  outline-offset: -1px;
+}
+
+/* The placeholder tree: a trunk rising from the lower third, one crown, and
+   a wash of light in the upper left where the sky is bright. It is a
+   placeholder, not a design decision -- the photograph replaces it. */
+.plate-ink {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(38% 42% at 22% 18%, oklch(1 0 0 / 0.45), transparent 68%),
+    radial-gradient(30% 46% at 66% 40%, oklch(0.78 0.11 122 / 0.5), transparent 62%),
+    radial-gradient(24% 30% at 58% 30%, oklch(0.85 0.1 118 / 0.55), transparent 60%);
+}
+
+.plate-ink::before {
+  content: "";
+  position: absolute;
+  left: 61%;
+  top: 42%;
+  bottom: -2%;
+  width: 4px;
+  background: oklch(0.25 0.02 160 / 0.7);
+  transform: rotate(5deg);
+  transform-origin: top center;
+}
+
+.plate-ink::after {
+  content: "";
+  position: absolute;
+  left: 48%;
+  top: 10%;
+  width: 2px;
+  height: 34%;
+  background: oklch(0.25 0.02 160 / 0.5);
+  transform: rotate(-26deg);
+  transform-origin: top center;
+}
+
+/* ── Stack: title left, verse right ──────────────────────────────────────
+   The title is the largest thing on the page and it is set in ume, the way
+   the wordmark is. The verse answers it on the right in quiet grey; the two
+   columns share one baseline so the pair reads as one heading. */
 
 .stack {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
-  column-gap: var(--sp-4, 1rem);
-  align-items: end;
-  margin-top: 1.75rem;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
+  column-gap: var(--sp-5);
+  align-items: last baseline;
+  margin-top: var(--sp-6);
 }
 
 .word {
@@ -100,77 +121,47 @@ body {
   font-size: var(--f-word);
   font-weight: 600;
   line-height: var(--lh-tight);
-  letter-spacing: -0.015em;
-  color: var(--ink);
-  /* The title is two balanced lines at every width. `Daun dan angin.` greedily
-     breaks into a full line and a one-word orphan at 390, so the balance runs
-     on the max width the box will ever take, not the current one. */
-  text-wrap: balance;
-  max-width: 8ch;
+  letter-spacing: -0.02em;
+  color: var(--ume-deep);
+  /* Two lines, and the break is written in the markup (`Daun dan<br />angin.`),
+     not left to the engine: `max-width: 7ch` balanced it into Daun / dan /
+     angin. -- three lines, with `dan` alone in the middle. The title is the
+     largest thing on the page, so its break is a decision, not a default. */
+  text-wrap: nowrap;
 }
 
 .verse {
-  margin-top: 0.875rem;
-  display: grid;
-  gap: 0.1rem;
-  max-width: 22ch;
-  font-weight: 400;
+  margin: 0;
   color: var(--ink-2);
+  max-width: 32ch;
 }
 
 .verse p { margin: 0; text-wrap: pretty; }
 
-/* The symbol column carries the catalogue mark: a hairline dot, a rule, then
-   the weekday set in the same spaced capitals as the plate caption. It is the
-   only place on the page where text is tracked wide enough to read as a label
-   rather than prose. */
-
-.sym {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.55rem;
-  padding-bottom: 0.2rem;
-}
-
-.sym-dot {
-  margin: 0;
-  width: 0.4rem;
-  height: 0.4rem;
-  border-radius: 50%;
-  background: var(--ume);
-  color: var(--ume);
-  font-size: 0;
-  line-height: 0;
-}
-
-.sym-word {
-  margin: 0;
-  font-size: var(--f-label);
-  font-weight: 500;
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  color: var(--ink-3);
-  text-align: right;
-}
-
-/* ── Colophon ─────────────────────────────────────────────────────────── */
+/* ── Colophon ────────────────────────────────────────────────────────────
+   Date and credit left; the barcode and its weekday right. The barcode is
+   drawn as bars, not a scannable code -- it is a filing mark. */
 
 .foot {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 0.35rem var(--sp-4, 1rem);
-  margin-top: 1.5rem;
-  padding-top: 0.75rem;
+  gap: var(--sp-5);
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-4);
   border-top: var(--rule) solid var(--hair);
-  font-size: var(--f-meta);
-  color: var(--ink-3);
 }
 
-.foot-date { margin: 0; font-weight: 400; letter-spacing: 0.02em; }
-.foot-date b { font-weight: 600; color: var(--ink); }
+.foot-nar { display: grid; gap: var(--sp-2); }
+
+.foot-date {
+  margin: 0;
+  font-size: var(--f-meta);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.foot-date b { font-weight: 600; }
 .foot-year { color: var(--ink-3); }
 
 .foot-credit {
@@ -178,12 +169,34 @@ body {
   font-size: var(--f-cap);
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.foot-sym {
+  display: grid;
+  justify-items: end;
+  gap: var(--sp-2);
+}
+
+.bar {
+  display: block;
+  width: var(--bar-w);
+  height: auto;
+}
+
+.bar-word {
+  margin: 0;
+  font-size: var(--f-cap);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink);
 }
 
 @media (max-width: 639px) {
-  body { padding: var(--sp-6, 1.5rem) var(--wp); }
-  .stack { margin-top: 1.375rem; }
-  .foot { margin-top: 1.25rem; }
+  body { padding: var(--sp-6) var(--wp); }
+  .stack { margin-top: var(--sp-5); }
+  .foot { margin-top: var(--sp-5); }
 }
 
 :where(a, button):focus-visible {

@@ -1,13 +1,13 @@
 :root {
   color-scheme: light;
 
-  /* One surface. The whole page is a sheet of paper; the figure is a plate
-     laid on it. Two greys carry every edge and every quiet word. */
+  /* One surface. The page is a sheet of paper; the plate is a photograph laid
+     on it. Two greys carry every edge and every quiet word. */
   --paper: #ffffff;
-  --plate: oklch(0 0 0 / 0.08);
 
-  /* ume ink, kept to the same ramp the theme uses. Ume is the only hue on
-     the page and it stays on words, never on surfaces. */
+  /* Ume ink, kept to the ramp the theme uses. The title is the one large
+     thing on the page, and it is set in ume the way the masthead's wordmark
+     is -- a deep green, not black. */
   --ink: #141414;
   --ink-2: #363636;
   --ink-3: #6b6b6b;
@@ -16,9 +16,11 @@
 
   --wp: 1.25rem;
 
-  /* The spacing ladder. Four steps only; the poster has four kinds of
-     distance: outside the sheet, plate→text, title→verse, colophon→rule. */
+  /* The spacing ladder. Sheet margins, then the two kinds of distance that
+     repeat: around the plate, and around the colophon's hairline. */
+  --sp-2: 0.5rem;
   --sp-4: 1rem;
+  --sp-5: 1.25rem;
   --sp-6: 1.5rem;
   --sp-10: 2.5rem;
 
@@ -26,23 +28,30 @@
   --hair: oklch(0 0 0 / 0.12);
 
   /* One type family: Jost, self-hosted so nothing depends on a third party.
-     600 carries the title and every label; 400 carries the prose. It is a
+     600 carries the title and every label; 400 carries the verse. It is a
      geometric grotesque -- the title's square capitals and the barcode's
      letter-spaced caption come from the same drawer. */
   --geo: "Jost", "Helvetica Neue", Arial, sans-serif;
-  --f-word: 2.5rem;
+  --f-word: 3.25rem;
   --f-label: 0.6875rem;
   --f-meta: 0.75rem;
-  --f-prose: 0.9375rem;
+  --f-prose: 0.875rem;
   --f-cap: 0.625rem;
 
-  --lh-tight: 1.06;
+  --lh-tight: 1.02;
   --lh-prose: 1.62;
+
+  /* The plate is a landscape frame -- the photograph is wider than it is
+     tall, and the page is built around that ratio rather than a portrait. */
+  --plate-r: 4 / 3;
+  --bar-w: 6.5rem;
 }
 
 @media (max-width: 639px) {
   :root {
     --wp: 1rem;
-    --f-word: 1.875rem;
+    --f-word: 2.25rem;
+    --f-prose: 0.8125rem;
+    --bar-w: 4.5rem;
   }
 }

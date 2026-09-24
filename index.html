@@ -13,36 +13,67 @@
   </head>
   <body>
     <main class="sheet">
-      <!-- The plate. A placeholder figure holds the ratio until a real one
-           arrives; `background-image` is the only line to change. -->
+      <!-- The eyebrow. A catalogue mark, the way a specimen sheet is filed. -->
+      <div class="eyebrow">
+        <p class="eyebrow-word">Instagram story</p>
+        <p class="eyebrow-dots" aria-hidden="true">···</p>
+      </div>
+
+      <!-- The plate. A landscape frame, the one place a colour lives. Today it
+           holds a painted placeholder; `background-image` on `.plate` is the
+           only line to change when a photograph arrives. -->
       <figure class="plate" data-plate>
         <div class="plate-ink" aria-hidden="true"></div>
-        <figcaption class="plate-cap" aria-hidden="true">Plate</figcaption>
       </figure>
 
+      <!-- The stack: the title takes the left and the verse answers on the
+           right. They meet on one baseline and the title is the largest
+           thing on the page by a wide margin. -->
       <div class="stack">
-        <!-- Left: the narrative column. Title, then the verse it belongs to. -->
         <div class="nar">
           <h1 class="word">Daun dan<br />angin.</h1>
-          <div class="verse">
-            <p>Falling leaves are not dead.</p>
-            <p>They are dancing on a windy day.</p>
-          </div>
         </div>
-
-        <!-- Right: the symbol column. A barcode is the oldest way to say
-             "this was catalogued on a Tuesday"; the word under it names
-             which one. -->
-        <div class="sym">
-          <p class="sym-dot" aria-hidden="true">·</p>
-          <p class="sym-word">FRIDAY</p>
+        <div class="verse">
+          <p>Siapa pun yang mengira bahwa daun-daun yang jatuh itu mati, dan tidak pernah mengira jika mereka sedang menari di hari yang berangin.</p>
         </div>
       </div>
 
-      <!-- The colophon. Same rule, same size, both ends of the page. -->
+      <!-- The colophon. Date and credit on the left; the barcode and its
+           weekday on the right, closing the page on the same hairline. -->
       <footer class="foot">
-        <p class="foot-date"><b>07</b> Oktober <span class="foot-year">/2022</span></p>
-        <p class="foot-credit">archive by : sfadhilahdila_</p>
+        <div class="foot-nar">
+          <p class="foot-date"><b>07</b> Oktober <span class="foot-year">/ 2022</span></p>
+          <p class="foot-credit">archive by : sfadhilahdila_</p>
+        </div>
+        <div class="foot-sym">
+          <svg class="bar" viewBox="0 0 120 40" aria-hidden="true" focusable="false" preserveAspectRatio="none">
+            <rect width="120" height="40" fill="var(--paper)" />
+            <g fill="var(--ink)">
+              <rect x="0" y="0" width="3" height="26" />
+              <rect x="6" y="0" width="1.5" height="26" />
+              <rect x="10" y="0" width="5" height="26" />
+              <rect x="18" y="0" width="1.5" height="26" />
+              <rect x="22" y="0" width="2.5" height="26" />
+              <rect x="27" y="0" width="6" height="26" />
+              <rect x="36" y="0" width="1.5" height="26" />
+              <rect x="40" y="0" width="3.5" height="26" />
+              <rect x="46" y="0" width="1.5" height="26" />
+              <rect x="50" y="0" width="5" height="26" />
+              <rect x="58" y="0" width="2" height="26" />
+              <rect x="63" y="0" width="6" height="26" />
+              <rect x="72" y="0" width="1.5" height="26" />
+              <rect x="76" y="0" width="3" height="26" />
+              <rect x="82" y="0" width="1.5" height="26" />
+              <rect x="86" y="0" width="5" height="26" />
+              <rect x="94" y="0" width="2" height="26" />
+              <rect x="99" y="0" width="1.5" height="26" />
+              <rect x="103" y="0" width="4" height="26" />
+              <rect x="110" y="0" width="1.5" height="26" />
+              <rect x="114" y="0" width="3" height="26" />
+            </g>
+          </svg>
+          <p class="bar-word">FRIDAY</p>
+        </div>
       </footer>
     </main>
   </body>
