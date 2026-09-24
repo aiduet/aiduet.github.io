@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daun dan angin</title>
+    <meta name="description" content="Leaves and wind." />
+    <link rel="icon" href="/public/favicon.svg" />
+    <link rel="preload" href="/public/fonts/jost-400-600-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="/src/fonts.css" />
+    <link rel="stylesheet" href="/src/tokens.css" />
+    <link rel="stylesheet" href="/src/poster.css" />
+  </head>
+  <body>
+    <main class="sheet">
+      <!-- The plate. A placeholder figure holds the ratio until a real one
+           arrives; `background-image` is the only line to change. -->
+      <figure class="plate" data-plate>
+        <div class="plate-ink" aria-hidden="true"></div>
+        <figcaption class="plate-cap" aria-hidden="true">Plate</figcaption>
+      </figure>
+
+      <div class="stack">
+        <!-- Left: the narrative column. Title, then the verse it belongs to. -->
+        <div class="nar">
+          <h1 class="word">Daun dan<br />angin.</h1>
+          <div class="verse">
+            <p>Falling leaves are not dead.</p>
+            <p>They are dancing on a windy day.</p>
+          </div>
+        </div>
+
+        <!-- Right: the symbol column. A barcode is the oldest way to say
+             "this was catalogued on a Tuesday"; the word under it names
+             which one. -->
+        <div class="sym">
+          <p class="sym-dot" aria-hidden="true">·</p>
+          <p class="sym-word">FRIDAY</p>
+        </div>
+      </div>
+
+      <!-- The colophon. Same rule, same size, both ends of the page. -->
+      <footer class="foot">
+        <p class="foot-date"><b>07</b> Oktober <span class="foot-year">/2022</span></p>
+        <p class="foot-credit">archive by : sfadhilahdila_</p>
+      </footer>
+    </main>
+  </body>
+</html>

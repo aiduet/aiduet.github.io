@@ -1,0 +1,48 @@
+:root {
+  color-scheme: light;
+
+  /* One surface. The whole page is a sheet of paper; the figure is a plate
+     laid on it. Two greys carry every edge and every quiet word. */
+  --paper: #ffffff;
+  --plate: oklch(0 0 0 / 0.08);
+
+  /* ume ink, kept to the same ramp the theme uses. Ume is the only hue on
+     the page and it stays on words, never on surfaces. */
+  --ink: #141414;
+  --ink-2: #363636;
+  --ink-3: #6b6b6b;
+  --ume: #00734e;
+  --ume-deep: #065c43;
+
+  --wp: 1.25rem;
+
+  /* The spacing ladder. Four steps only; the poster has four kinds of
+     distance: outside the sheet, plate→text, title→verse, colophon→rule. */
+  --sp-4: 1rem;
+  --sp-6: 1.5rem;
+  --sp-10: 2.5rem;
+
+  --rule: 1px;
+  --hair: oklch(0 0 0 / 0.12);
+
+  /* One type family: Jost, self-hosted so nothing depends on a third party.
+     600 carries the title and every label; 400 carries the prose. It is a
+     geometric grotesque -- the title's square capitals and the barcode's
+     letter-spaced caption come from the same drawer. */
+  --geo: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --f-word: 2.5rem;
+  --f-label: 0.6875rem;
+  --f-meta: 0.75rem;
+  --f-prose: 0.9375rem;
+  --f-cap: 0.625rem;
+
+  --lh-tight: 1.06;
+  --lh-prose: 1.62;
+}
+
+@media (max-width: 639px) {
+  :root {
+    --wp: 1rem;
+    --f-word: 1.875rem;
+  }
+}
