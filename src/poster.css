@@ -12,6 +12,20 @@ html {
   font-synthesis: none;
 }
 
+/* A poster is sized by the frame it is hung in. Everything on this sheet is
+   in rem, so the root size is the one lever: on a window too short to hold
+   the sheet whole, the whole thing comes down together instead of the
+   colophon — date, barcode, weekday — running past the fold. 58.938rem is
+   the sheet's own height plus its margins, measured, so 61 leaves it a
+   little air; it never grows past 1rem, so a tall window shows the sheet at
+   its design size and no larger.
+   Below 640px the sheet is bounded by the viewport width rather than by the
+   height, so the phone keeps its own fixed size. */
+@media (min-width: 640px) {
+  html { font-size: clamp(0.625rem, calc(100vh / 61), 1rem); }
+  html { font-size: clamp(0.625rem, calc(100dvh / 61), 1rem); }
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -99,7 +113,7 @@ body {
    the largest type and it is set in --word. */
 
 .word {
-  margin: 0;
+  margin: 0 0 var(--sp-6);
   font-size: var(--f-word);
   font-weight: 600;
   line-height: var(--lh-tight);
@@ -124,12 +138,12 @@ body {
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  gap: var(--sp-6);
 }
 
 .ways {
   display: grid;
   width: 100%;
+  margin: 0 0 var(--sp-4);
   font-size: var(--f-cap);
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -159,6 +173,51 @@ body {
   outline-offset: 3px;
 }
 
+/* The cover line. The one piece of running prose in this column, so it takes
+   the italic Jost the page ships and had never used — a cover's own voice,
+   quieter than the title, different from the verse's roman. */
+.cover-line {
+  margin: 0;
+  font-size: var(--f-meta);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
+
+/* The mark that says a word is a door. A hand-drawn wave under it — the
+   word's own grey at rest, the title's green under the cursor. It hugs the
+   word, so it reads as a mark on the text and not as another rule drawn
+   across the rail; the sheet keeps its single hairline at the top of the
+   block. It is always there, so a phone with no cursor still gets the hint. */
+.ways-k {
+  position: relative;
+  display: inline-block;
+}
+
+.ways-k::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0.18em; /* the trailing letter-space is not part of the word */
+  bottom: -0.5em;
+  height: 5px;
+  background-color: currentColor;
+  opacity: 0.45;
+  -webkit-mask-image: var(--wave);
+  mask-image: var(--wave);
+  -webkit-mask-repeat: repeat-x;
+  mask-repeat: repeat-x;
+  -webkit-mask-size: 36px 5px;
+  mask-size: 36px 5px;
+  transition: opacity 120ms ease-out;
+}
+
+.ways a:hover .ways-k::after,
+.ways a:focus-visible .ways-k::after {
+  opacity: 1;
+}
+
 .verse {
   margin: 0;
   color: var(--ink-2);
@@ -181,10 +240,16 @@ body {
 }
 
 .foot-date { grid-column: 1; grid-row: 2; }
+.foot-issue { grid-column: 1; grid-row: 1; }
 .bar { grid-column: 2; grid-row: 1; justify-self: end; }
 .bar-word { grid-column: 2; grid-row: 2; justify-self: end; }
 
-.foot-date {
+/* The issue marker, over the date. It is the one thing a cover has that a
+   poster does not, and it pairs with the barcode on the other rail: the
+   filing mark of the issue, with its number. Same register as the date, in
+   the caps the weekday already speaks, one step quieter. */
+.foot-date,
+.foot-issue {
   margin: 0;
   font-size: var(--f-cap);
   font-weight: 400;
@@ -192,6 +257,9 @@ body {
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
+
+.foot-issue { text-transform: uppercase; }
+
 .foot-date b { font-weight: 600; color: var(--ink-2); }
 .foot-year { color: var(--ink-3); }
 
