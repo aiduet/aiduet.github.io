@@ -133,11 +133,10 @@ body {
    speak (`.eyebrow`, `.bar-word`). Same size, same grey, same tracking; the
    title is the one loud thing and these stay a contents line, not a menu.
 
-   One hairline over the block closes it off from the title above, and the
-   three rows are a single quiet register — no per-row rule, no arrows, no
-   numbers. At 9px a rule reads louder than the word it separates, so the
-   block gets one line and the rows get air. The rows stay a real 44px hit
-   area: the padding below carries the reach, not a visible border. */
+   Air, not a hairline, sits between the title and this index. The three
+   rows are a single quiet register — no per-row rule, no arrows, no
+   numbers. The rows stay a real 44px hit area: the padding below carries
+   the reach, not a visible border. */
 .nar {
   display: flex;
   flex-direction: column;
@@ -150,13 +149,12 @@ body {
 .ways {
   display: grid;
   width: 100%;
-  margin: 0 0 var(--sp-6);
+  margin: 0;
   font-size: var(--f-cap);
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   line-height: 1;
-  border-top: var(--rule) solid var(--hair);
 }
 
 .ways a {
@@ -180,23 +178,11 @@ body {
   outline-offset: 3px;
 }
 
-/* The cover line. The one piece of running prose in this column, so it takes
-   the italic Jost the page ships and had never used — a cover's own voice,
-   quieter than the title, different from the verse's roman. */
-.cover-line {
-  margin: 0;
-  font-size: var(--f-meta);
-  font-style: italic;
-  line-height: 1.5;
-  color: var(--ink-2);
-  text-wrap: pretty;
-}
-
 /* The mark that says a word is a door. A hand-drawn wave under it — the
    word's own grey at rest, the title's green under the cursor. It hugs the
-   word, so it reads as a mark on the text and not as another rule drawn
-   across the rail; the sheet keeps its single hairline at the top of the
-   block. It is always there, so a phone with no cursor still gets the hint. */
+   word, so it reads as a mark on the text and not as a rule drawn
+   across the rail. It is always there, so a phone with no cursor still
+   gets the hint. */
 .ways-k {
   position: relative;
   display: inline-block;
@@ -226,13 +212,32 @@ body {
 }
 
 .verse {
-  margin: 0;
+  /* The first line of the verse sits on the same optical top as the
+     title's first line. The title is 32px at line-height 1; the verse is
+     12px at 1.45 — their ink tops disagree by 6px at the design size,
+     which is 0.375rem. */
+  margin: -0.375rem 0 0;
   color: var(--ink-2);
   display: grid;
   row-gap: 0.85em;
 }
 
 .verse p { margin: 0; text-wrap: pretty; }
+
+/* The cover line. A supplement after the verse, same left edge, italic
+   Jost — quieter than the title, different from the verse's roman.
+   Pause after the reading, larger than the gap between the two
+   paragraphs. `.verse p` would zero this, so the rule has to win. The
+   grid already puts 0.85em between items; this is the remainder to
+   --sp-4. */
+.verse .cover-line {
+  margin-top: calc(var(--sp-4) - 0.85em);
+  font-size: var(--f-meta);
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--ink-2);
+  text-wrap: pretty;
+}
 
 .stack { margin: 0 0 var(--sp-8); }
 
