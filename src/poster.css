@@ -55,7 +55,8 @@ body {
 
 /* ── Eyebrow ──────────────────────────────────────────────────────────────
    A catalogue mark, small and tracked out. Trailing tracking is cancelled
-   so the last glyph sits on the plate's right edge. */
+   so the last glyph sits on the plate's right edge. It is caps, like every
+   other label on the sheet: the apparatus is caps, the reading is lowercase. */
 
 .eyebrow {
   display: flex;
@@ -66,6 +67,7 @@ body {
   font-size: var(--f-cap);
   font-weight: 500;
   letter-spacing: 0.18em;
+  text-transform: uppercase;
   color: var(--ink-3);
 }
 
@@ -140,10 +142,13 @@ body {
   align-items: stretch;
 }
 
+/* The index of doors. Caps at the masthead's tracking, like every label on
+   the sheet — the words are lowercase and the wave has to clear their
+   descenders, which is why this row is not set in lowercase. */
 .ways {
   display: grid;
   width: 100%;
-  margin: 0 0 var(--sp-4);
+  margin: 0 0 var(--sp-6);
   font-size: var(--f-cap);
   font-weight: 500;
   letter-spacing: 0.18em;
@@ -200,7 +205,7 @@ body {
   position: absolute;
   left: 0;
   right: 0.18em; /* the trailing letter-space is not part of the word */
-  bottom: -0.5em;
+  bottom: -0.6em;
   height: 5px;
   background-color: currentColor;
   opacity: 0.45;
@@ -244,10 +249,9 @@ body {
 .bar { grid-column: 2; grid-row: 1; justify-self: end; }
 .bar-word { grid-column: 2; grid-row: 2; justify-self: end; }
 
-/* The issue marker, over the date. It is the one thing a cover has that a
-   poster does not, and it pairs with the barcode on the other rail: the
-   filing mark of the issue, with its number. Same register as the date, in
-   the caps the weekday already speaks, one step quieter. */
+/* The colophon's two lines. They are the sheet's apparatus, so they take the
+   caps the labels take — but they are data and not labels, so their tracking
+   stays tight. Labels are tracked out; information is not. */
 .foot-date,
 .foot-issue {
   margin: 0;
@@ -256,9 +260,8 @@ body {
   letter-spacing: 0.04em;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
+  text-transform: uppercase;
 }
-
-.foot-issue { text-transform: uppercase; }
 
 .foot-date b { font-weight: 600; color: var(--ink-2); }
 .foot-year { color: var(--ink-3); }
@@ -269,13 +272,14 @@ body {
   height: 1.5rem;
 }
 
+/* The weekday takes the same tracking as every other label, and sits at the
+   right rail under the barcode. It used to be stretched to the barcode's own
+   measure, which forced six letters across eighty pixels. */
 .bar-word {
-  display: flex;
-  justify-content: space-between;
-  width: var(--bar-w);
   margin: 0;
   font-size: var(--f-cap);
   font-weight: 500;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--ink);
 }
