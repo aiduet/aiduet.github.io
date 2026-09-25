@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Daun dan angin</title>
-    <meta name="description" content="Leaves and wind." />
+    <title>Elegy for a Park</title>
+    <meta name="description" content="Elegy for a Park." />
     <link rel="icon" href="/public/favicon.svg" />
     <link rel="preload" href="/public/fonts/jost-400-600-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="stylesheet" href="/src/fonts.css" />
@@ -12,68 +12,96 @@
     <link rel="stylesheet" href="/src/poster.css" />
   </head>
   <body>
+    <!--
+      Copy lives here, in one place, so an English or Spanish pass is an
+      edit of these strings and not a layout rewrite.
+      eyebrow: fennlee story · shanghai + weather (placeholder)
+      title:   Elegy for / a Park
+      verse:   The past? If there is no beginning… (Borges, Elegy for a Park)
+      date:    07 Oktober / 2022
+      doors:   blog · github · poems  (hrefs later)
+      barcode: null (Code 128)
+      weekday: FRIDAY
+    -->
     <main class="sheet">
       <!-- The eyebrow. A catalogue mark, the way a specimen sheet is filed. -->
       <div class="eyebrow">
-        <p class="eyebrow-word">Instagram story</p>
-        <p class="eyebrow-dots" aria-hidden="true">···</p>
+        <p class="eyebrow-word">fennlee story</p>
+        <p class="eyebrow-place">
+          <span>shanghai</span>
+          <svg class="wx" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+            <circle cx="8" cy="8" r="2.6" fill="none" stroke="currentColor" stroke-width="1.2" />
+            <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+              <path d="M8 1.6v1.5M8 12.9v1.5M1.6 8h1.5M12.9 8h1.5M3.3 3.3l1.1 1.1M11.6 11.6l1.1 1.1M3.3 12.7l1.1-1.1M11.6 4.4l1.1-1.1" />
+            </g>
+          </svg>
+        </p>
       </div>
 
-      <!-- The plate. A landscape frame, the one place a colour lives. Today it
-           holds a painted placeholder; `background-image` on `.plate` is the
-           only line to change when a photograph arrives. -->
+      <!-- The plate. A 4:5 portrait frame. The photograph is cropped to
+           that ratio (`object-fit: cover`); swap the src when a new one arrives. -->
       <figure class="plate" data-plate>
-        <div class="plate-ink" aria-hidden="true"></div>
+        <img class="plate-img" src="/public/plate.jpg" alt="" width="717" height="1280" />
       </figure>
 
       <!-- The stack: the title takes the left and the verse answers on the
-           right. They meet on one baseline and the title is the largest
-           thing on the page by a wide margin. -->
+           right. They share a top edge. The title is the largest type. -->
       <div class="stack">
         <div class="nar">
-          <h1 class="word">Daun dan<br />angin.</h1>
+          <h1 class="word">Elegy for<br />a Park</h1>
+          <!-- The way out. Three destinations, set in the page's own small
+               register: the tracked, uppercase caps the eyebrow and the
+               colophon already speak. No arrows, no numbers, no pill bar —
+               a contents line for the sheet, one hairline under each. -->
+          <nav class="ways" aria-label="index">
+            <a href="#">
+              <span class="ways-k">blog</span>
+            </a>
+            <a href="#">
+              <span class="ways-k">github</span>
+            </a>
+            <a href="#">
+              <span class="ways-k">poems</span>
+            </a>
+          </nav>
         </div>
         <div class="verse">
-          <p>Siapa pun yang mengira bahwa daun-daun yang jatuh itu mati, dan tidak pernah mengira jika mereka sedang menari di hari yang berangin.</p>
+          <p>The past? If there is no beginning and no end, if what there is in store for us is only an infinite sum of white days and black nights, we already are the past that we shall be.</p>
+          <p>We are time, the indivisible river, we are Uxmal, and Carthage, and the broken wall of the Romans, long since worn away, and the lost park these lines commemorate.</p>
         </div>
       </div>
 
-      <!-- The colophon. Date and credit on the left; the barcode and its
-           weekday on the right, closing the page on the same hairline. -->
+      <!-- The colophon. Date, small, bottom left. Barcode and weekday
+           stay on the right. A place for the nav lives under the title. -->
       <footer class="foot">
-        <div class="foot-nar">
-          <p class="foot-date"><b>07</b> Oktober <span class="foot-year">/ 2022</span></p>
-          <p class="foot-credit">archive by : sfadhilahdila_</p>
-        </div>
-        <div class="foot-sym">
-          <svg class="bar" viewBox="0 0 120 40" aria-hidden="true" focusable="false" preserveAspectRatio="none">
-            <rect width="120" height="40" fill="var(--paper)" />
+        <p class="foot-date"><b>07</b> Oktober <span class="foot-year">/ 2022</span></p>
+        <svg class="bar" viewBox="0 0 79 24" aria-label="null" focusable="false">
             <g fill="var(--ink)">
-              <rect x="0" y="0" width="3" height="26" />
-              <rect x="6" y="0" width="1.5" height="26" />
-              <rect x="10" y="0" width="5" height="26" />
-              <rect x="18" y="0" width="1.5" height="26" />
-              <rect x="22" y="0" width="2.5" height="26" />
-              <rect x="27" y="0" width="6" height="26" />
-              <rect x="36" y="0" width="1.5" height="26" />
-              <rect x="40" y="0" width="3.5" height="26" />
-              <rect x="46" y="0" width="1.5" height="26" />
-              <rect x="50" y="0" width="5" height="26" />
-              <rect x="58" y="0" width="2" height="26" />
-              <rect x="63" y="0" width="6" height="26" />
-              <rect x="72" y="0" width="1.5" height="26" />
-              <rect x="76" y="0" width="3" height="26" />
-              <rect x="82" y="0" width="1.5" height="26" />
-              <rect x="86" y="0" width="5" height="26" />
-              <rect x="94" y="0" width="2" height="26" />
-              <rect x="99" y="0" width="1.5" height="26" />
-              <rect x="103" y="0" width="4" height="26" />
-              <rect x="110" y="0" width="1.5" height="26" />
-              <rect x="114" y="0" width="3" height="26" />
+              <rect x="0" y="0" width="2" height="24" />
+              <rect x="3" y="0" width="1" height="24" />
+              <rect x="6" y="0" width="1" height="24" />
+              <rect x="11" y="0" width="2" height="24" />
+              <rect x="17" y="0" width="1" height="24" />
+              <rect x="19" y="0" width="1" height="24" />
+              <rect x="22" y="0" width="1" height="24" />
+              <rect x="25" y="0" width="4" height="24" />
+              <rect x="31" y="0" width="1" height="24" />
+              <rect x="33" y="0" width="2" height="24" />
+              <rect x="37" y="0" width="1" height="24" />
+              <rect x="39" y="0" width="1" height="24" />
+              <rect x="44" y="0" width="2" height="24" />
+              <rect x="48" y="0" width="1" height="24" />
+              <rect x="50" y="0" width="1" height="24" />
+              <rect x="55" y="0" width="3" height="24" />
+              <rect x="59" y="0" width="4" height="24" />
+              <rect x="64" y="0" width="1" height="24" />
+              <rect x="66" y="0" width="2" height="24" />
+              <rect x="71" y="0" width="3" height="24" />
+              <rect x="75" y="0" width="1" height="24" />
+              <rect x="77" y="0" width="2" height="24" />
             </g>
           </svg>
-          <p class="bar-word">FRIDAY</p>
-        </div>
+          <p class="bar-word"><span>F</span><span>R</span><span>I</span><span>D</span><span>A</span><span>Y</span></p>
       </footer>
     </main>
   </body>

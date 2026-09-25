@@ -1,6 +1,6 @@
-/* The sheet: one sheet of paper, margins held by --wp. Nothing else. It is
-   a column that never exceeds a story frame's own proportions, so on a wide
-   screen the poster stays a poster instead of stretching. */
+/* The sheet: one sheet of paper. Two equal columns, one gutter. Eyebrow
+   and plate span the sheet; title/verse and the colophon sit on that same
+   pair of rails. */
 
 * { box-sizing: border-box; }
 
@@ -31,90 +31,72 @@ body {
   flex-direction: column;
 }
 
+.stack,
+.foot {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--gutter);
+  align-items: start;
+}
+
 /* ── Eyebrow ──────────────────────────────────────────────────────────────
-   A catalogue mark, small and tracked out. It is the only uppercase line in
-   the header position, and the dots on the right are a story-frame nod, not
-   a control. */
+   A catalogue mark, small and tracked out. Trailing tracking is cancelled
+   so the last glyph sits on the plate's right edge. */
 
 .eyebrow {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  gap: var(--sp-4);
-  margin-bottom: var(--sp-4);
+  gap: var(--gutter);
+  margin: 0 0 var(--sp-4);
   font-size: var(--f-cap);
   font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
+  letter-spacing: 0.18em;
   color: var(--ink-3);
 }
 
 .eyebrow p { margin: 0; }
 
+.eyebrow-place {
+  display: flex;
+  align-items: center;
+  gap: 0.45em;
+  margin: 0;
+}
+
+.wx {
+  display: block;
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+}
+
 /* ── Plate ────────────────────────────────────────────────────────────────
-   A landscape frame -- the photograph is the one colour field on the page, so
-   it gets the only inset hairline and no second treatment. Placeholder paint
-   is a soft ume wash; `background-image` on `.plate` replaces it whole. */
+   A portrait 4:5 frame. The photograph fills it and is cropped to that
+   ratio; the source is 717×1280 (~9:16). */
 
 .plate {
   position: relative;
-  margin: 0;
+  margin: 0 0 var(--sp-6);
   aspect-ratio: var(--plate-r);
   width: 100%;
   overflow: hidden;
-  background: linear-gradient(168deg, #a8cfe0 0%, #8dbdd6 42%, #cfe3d8 70%, #eef4e8 100%);
-  outline: var(--rule) solid oklch(0 0 0 / 0.1);
-  outline-offset: -1px;
+  background: var(--paper);
 }
 
-/* The placeholder tree: a trunk rising from the lower third, one crown, and
-   a wash of light in the upper left where the sky is bright. It is a
-   placeholder, not a design decision -- the photograph replaces it. */
-.plate-ink {
+.plate-img {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(38% 42% at 22% 18%, oklch(1 0 0 / 0.45), transparent 68%),
-    radial-gradient(30% 46% at 66% 40%, oklch(0.78 0.11 122 / 0.5), transparent 62%),
-    radial-gradient(24% 30% at 58% 30%, oklch(0.85 0.1 118 / 0.55), transparent 60%);
-}
-
-.plate-ink::before {
-  content: "";
-  position: absolute;
-  left: 61%;
-  top: 42%;
-  bottom: -2%;
-  width: 4px;
-  background: oklch(0.25 0.02 160 / 0.7);
-  transform: rotate(5deg);
-  transform-origin: top center;
-}
-
-.plate-ink::after {
-  content: "";
-  position: absolute;
-  left: 48%;
-  top: 10%;
-  width: 2px;
-  height: 34%;
-  background: oklch(0.25 0.02 160 / 0.5);
-  transform: rotate(-26deg);
-  transform-origin: top center;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 /* ── Stack: title left, verse right ──────────────────────────────────────
-   The title is the largest thing on the page and it is set in ume, the way
-   the wordmark is. The verse answers it on the right in quiet grey; the two
-   columns share one baseline so the pair reads as one heading. */
-
-.stack {
-  display: grid;
-  grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr);
-  column-gap: var(--sp-5);
-  align-items: last baseline;
-  margin-top: var(--sp-6);
-}
+   Same two columns as the colophon. They share a top edge. The title is
+   the largest type and it is set in --word. */
 
 .word {
   margin: 0;
@@ -122,81 +104,116 @@ body {
   font-weight: 600;
   line-height: var(--lh-tight);
   letter-spacing: -0.02em;
-  color: var(--ume-deep);
-  /* Two lines, and the break is written in the markup (`Daun dan<br />angin.`),
-     not left to the engine: `max-width: 7ch` balanced it into Daun / dan /
-     angin. -- three lines, with `dan` alone in the middle. The title is the
-     largest thing on the page, so its break is a decision, not a default. */
+  color: var(--word);
+  /* Two lines, and the break is written in the markup (`Elegy for<br />a Park`),
+     not left to the engine. */
   text-wrap: nowrap;
+}
+
+/* The ways out. Three destinations under the title, set in the page's own
+   small register — the tracked caps the eyebrow and the colophon already
+   speak (`.eyebrow`, `.bar-word`). Same size, same grey, same tracking; the
+   title is the one loud thing and these stay a contents line, not a menu.
+
+   One hairline over the block closes it off from the title above, and the
+   three rows are a single quiet register — no per-row rule, no arrows, no
+   numbers. At 9px a rule reads louder than the word it separates, so the
+   block gets one line and the rows get air. The rows stay a real 44px hit
+   area: the padding below carries the reach, not a visible border. */
+.nar {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-6);
+}
+
+.ways {
+  display: grid;
+  width: 100%;
+  font-size: var(--f-cap);
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1;
+  border-top: var(--rule) solid var(--hair);
+}
+
+.ways a {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  min-height: 1.875rem;
+  padding: 0.5rem 0;
+  color: var(--ink-2);
+  text-decoration: none;
+  transition: color 120ms ease-out;
+}
+
+.ways a:hover,
+.ways a:focus-visible {
+  color: var(--word);
+}
+
+.ways a:focus-visible {
+  outline: var(--rule) solid var(--ume);
+  outline-offset: 3px;
 }
 
 .verse {
   margin: 0;
   color: var(--ink-2);
-  max-width: 32ch;
+  display: grid;
+  row-gap: 0.85em;
 }
 
 .verse p { margin: 0; text-wrap: pretty; }
 
+.stack { margin: 0 0 var(--sp-8); }
+
 /* ── Colophon ────────────────────────────────────────────────────────────
-   Date and credit left; the barcode and its weekday right. The barcode is
-   drawn as bars, not a scannable code -- it is a filing mark. */
+   Date, small, bottom left. Barcode and weekday stay on the right, the
+   barcode its own width and right-aligned. No credit line. No hairline. */
 
 .foot {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--sp-5);
-  margin-top: var(--sp-6);
-  padding-top: var(--sp-4);
-  border-top: var(--rule) solid var(--hair);
+  grid-template-rows: auto auto;
+  row-gap: var(--sp-2);
+  align-items: end;
 }
 
-.foot-nar { display: grid; gap: var(--sp-2); }
+.foot-date { grid-column: 1; grid-row: 2; }
+.bar { grid-column: 2; grid-row: 1; justify-self: end; }
+.bar-word { grid-column: 2; grid-row: 2; justify-self: end; }
 
 .foot-date {
   margin: 0;
-  font-size: var(--f-meta);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  color: var(--ink);
-}
-.foot-date b { font-weight: 600; }
-.foot-year { color: var(--ink-3); }
-
-.foot-credit {
-  margin: 0;
   font-size: var(--f-cap);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0.04em;
   color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
 }
-
-.foot-sym {
-  display: grid;
-  justify-items: end;
-  gap: var(--sp-2);
-}
+.foot-date b { font-weight: 600; color: var(--ink-2); }
+.foot-year { color: var(--ink-3); }
 
 .bar {
   display: block;
   width: var(--bar-w);
-  height: auto;
+  height: 1.5rem;
 }
 
 .bar-word {
+  display: flex;
+  justify-content: space-between;
+  width: var(--bar-w);
   margin: 0;
   font-size: var(--f-cap);
   font-weight: 500;
-  letter-spacing: 0.3em;
   text-transform: uppercase;
   color: var(--ink);
 }
 
 @media (max-width: 639px) {
   body { padding: var(--sp-6) var(--wp); }
-  .stack { margin-top: var(--sp-5); }
-  .foot { margin-top: var(--sp-5); }
 }
 
 :where(a, button):focus-visible {
