@@ -23,7 +23,7 @@
       issue:   01
       doors:   blog.lifeng.net · github.com/fennlee · poetry.lifeng.net
       cover:   trains, parks, and the light at dusk (placeholder)
-      weather: lifeng-weather worker (place, temp, code, isDay)
+      weather: wx worker on workers.dev (place, temp, code, isDay)
       barcode: null (Code 128)
       weekday: FRIDAY
     -->
@@ -116,7 +116,7 @@
     </main>
     <script>
       // One family of line glyphs, same 1.2 stroke as the sun the sheet ships
-      // with. Keyed by the WMO code the lifeng-weather worker returns; a night
+      // with. Keyed by the WMO code the weather worker returns; a night
       // reading swaps the two clear states for the moon. Anything unrecognised
       // stays the sun already drawn above.
       var WX = {
@@ -154,7 +154,7 @@
         var place = document.querySelector("[data-wx-place]");
         var temp = document.querySelector("[data-wx-temp]");
         if (!icon) return;
-        fetch("https://weather.lifeng.net/shanghai")
+        fetch("https://wx.hareai.workers.dev/shanghai")
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (d) {
             if (!d || typeof d.code !== "number") return;
