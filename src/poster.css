@@ -87,6 +87,8 @@ body {
   flex: none;
 }
 
+.eyebrow-place [hidden] { display: none; }
+
 /* ── Plate ────────────────────────────────────────────────────────────────
    A portrait 4:5 frame. The photograph fills it and is cropped to that
    ratio; the source is 717×1280 (~9:16). */
