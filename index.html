@@ -154,7 +154,7 @@
         var place = document.querySelector("[data-wx-place]");
         var temp = document.querySelector("[data-wx-temp]");
         if (!icon) return;
-        fetch("https://wx.hareai.workers.dev/shanghai")
+        fetch("https://wx.lilt.workers.dev/shanghai")
           .then(function (r) { return r.ok ? r.json() : null; })
           .then(function (d) {
             if (!d || typeof d.code !== "number") return;
