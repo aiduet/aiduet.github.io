@@ -35,13 +35,15 @@ are white and the plate's own colour.
 ```text
 /
 ├── index.html
+├── contact.html       # a board of two mail doors
 ├── public/
 │   ├── favicon.svg
 │   └── fonts/
 └── src/
     ├── tokens.css     # every colour, size, and distance on the page
     ├── fonts.css      # @font-face + unicode ranges
-    └── poster.css     # the layout
+    ├── poster.css     # the layout
+    └── contact.css    # the contact board
 ```
 
 ## Running it
