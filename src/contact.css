@@ -131,13 +131,15 @@ body {
 .ways-k {
   position: relative;
   display: inline-block;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .ways-k::after {
   content: "";
   position: absolute;
   left: 0;
-  right: 0.18em;
+  right: 0;
   bottom: -0.6em;
   height: 5px;
   background-color: currentColor;
