@@ -49,7 +49,7 @@ I used to keep private code on Coding, for three reasons:
 I knew it from work. Push and pull in China was fast. I had private image repos and a few hundred free minutes for deploy. Then it became paid, and deploy to servers abroad was slow. I tried my own nodes. They were still slow, likely because those servers were weak.">
   <meta itemprop="datePublished" content="2023-02-12T00:00:00+00:00">
   <meta itemprop="dateModified" content="2023-02-12T00:00:00+00:00">
-  <meta itemprop="wordCount" content="368">
+  <meta itemprop="wordCount" content="365">
   <meta itemprop="keywords" content="Notes">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -252,129 +252,124 @@ I knew it from work. Push and pull in China was fast. I had private image repos 
 <p>Local → GitHub → Docker Hub → reset the pod → k3s pulls</p>
 <h2 id="build-and-push-the-image">Build and push the image</h2>
 <p><code>.github/workflows/build-and-deploy.yml</code>:</p>
-<pre tabindex="0"><code>name: Build and Deploy
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  build-and-deploy:
-    runs-on: ubuntu-22.04
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          hugo-version: &#39;0.110.0&#39;
-
-      - name: Remove old public folder
-        run: rm -rf public
-
-      - name: Build website
-        run: hugo --minify
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }} # create a on docker
-
-      - name: Build image and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./Dockerfile
-          push: true
-          tags: avacooper/blog:latest # your img path
-
-      - name: Cleanup
-        run: |
-          docker system prune -af --volumes
-          rm -rf ./public
-</code></pre><p>Hugo writes static files into <code>public/</code>. nginx can serve that folder as-is.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Build and Deploy<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">on</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">push</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">branches</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- main<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">jobs</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">build-and-deploy</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">runs-on</span>:<span style="color:#bbb"> </span>ubuntu-22.04<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">steps</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Checkout code<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>actions/checkout@v3<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Setup Hugo<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>peaceiris/actions-hugo@v2<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">with</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">hugo-version</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#39;0.110.0&#39;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Remove old public folder<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">run</span>:<span style="color:#bbb"> </span>rm -rf public<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Build website<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">run</span>:<span style="color:#bbb"> </span>hugo --minify<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Login to Docker Hub<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>docker/login-action@v2<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">with</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">username</span>:<span style="color:#bbb"> </span>${{ secrets.DOCKERHUB_USERNAME }}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">password</span>:<span style="color:#bbb"> </span>${{ secrets.DOCKERHUB_TOKEN }}<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic"># create a on docker</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Build image and push<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">uses</span>:<span style="color:#bbb"> </span>docker/build-push-action@v4<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">with</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">context</span>:<span style="color:#bbb"> </span>.<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">file</span>:<span style="color:#bbb"> </span>./Dockerfile<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">push</span>:<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">true</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">tags</span>:<span style="color:#bbb"> </span>avacooper/blog:latest<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic"># your img path</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>Cleanup<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">run</span>:<span style="color:#bbb"> </span>|<span style="color:#4070a0;font-style:italic">
+</span></span></span><span style="display:flex;"><span><span style="color:#4070a0;font-style:italic">          docker system prune -af --volumes
+</span></span></span><span style="display:flex;"><span><span style="color:#4070a0;font-style:italic">          rm -rf ./public</span><span style="color:#bbb">
+</span></span></span></code></pre></div><p>Hugo writes static files into <code>public/</code>. nginx can serve that folder as-is.</p>
 <p><code>Dockerfile</code>:</p>
-<pre tabindex="0"><code>FROM nginx:alpine
-
-COPY public/ /usr/share/nginx/html/
-
-EXPOSE 80
-</code></pre><h2 id="k3s">k3s</h2>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">FROM</span><span style="color:#bbb"> </span><span style="color:#4070a0">nginx:alpine</span><span style="">
+</span></span></span><span style="display:flex;"><span><span style="">
+</span></span></span><span style="display:flex;"><span><span style=""></span><span style="color:#007020;font-weight:bold">COPY</span> public/ /usr/share/nginx/html/<span style="">
+</span></span></span><span style="display:flex;"><span><span style="">
+</span></span></span><span style="display:flex;"><span><span style=""></span><span style="color:#007020;font-weight:bold">EXPOSE</span><span style="color:#bbb"> </span><span style="color:#4070a0">80</span><span style="">
+</span></span></span></code></pre></div><h2 id="k3s">k3s</h2>
 <p>I already had cert-manager, so I did not use LoadBalancer. I used nginx-ingress.</p>
-<pre tabindex="0"><code>apiVersion: v1
-kind: Service
-metadata:
-  name: org-domain-blog
-  labels:
-    app: blog
-spec:
-  ports:
-    - port: 80
-      name: blog
-      targetPort: 80
-  selector:
-    app: blog
-  type: ClusterIP
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: blog
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: blog
-  template:
-    metadata:
-      labels:
-        app: blog
-    spec:
-      containers:
-        - name: blog
-          image: avacooper/blog:latest
-          ports:
-            - containerPort: 80
-          imagePullPolicy: Always
-    #   nodeSelector:
-    #     nn: sp
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: org-domain-blog-ingress
-  annotations:
-    cert-manager.io/cluster-issuer: &#34;letsencrypt-prod&#34;
-    nginx.ingress.kubernetes.io/proxy-send-timeout: &#34;3600&#34;
-    nginx.ingress.kubernetes.io/proxy-read-timeout: &#34;3600&#34;
-spec:
-  ingressClassName: nginx
-  tls:
-  - hosts: 
-    - &#34;*.domain.org&#34;
-    - &#34;blog.domain.org&#34;
-    secretName: tls
-  rules:
-  - host: blog.domain.org
-    http:
-      paths:
-      - path: /
-        pathType: Prefix
-        backend:
-          service: 
-            name: org-domain-blog
-            port:
-              number: 80
-</code></pre><p>The image on Docker Hub is public. I may buy a larger server later so I can keep a private image.</p>
-<p><a href="/blog/?q=blog">#blog</a></p>
-<pre><code>                [#docker](/blog/?q=docker)
-            
-                [#notes](/blog/?q=notes)
-</code></pre>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#062873;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Service<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>org-domain-blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">labels</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">app</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- <span style="color:#062873;font-weight:bold">port</span>:<span style="color:#bbb"> </span><span style="color:#40a070">80</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">targetPort</span>:<span style="color:#bbb"> </span><span style="color:#40a070">80</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">selector</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">app</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">type</span>:<span style="color:#bbb"> </span>ClusterIP<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#0e84b5;font-weight:bold">---</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>apps/v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Deployment<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">replicas</span>:<span style="color:#bbb"> </span><span style="color:#40a070">1</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">selector</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">matchLabels</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">app</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">template</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">labels</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">app</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">containers</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span>- <span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">image</span>:<span style="color:#bbb"> </span>avacooper/blog:latest<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">ports</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span>- <span style="color:#062873;font-weight:bold">containerPort</span>:<span style="color:#bbb"> </span><span style="color:#40a070">80</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">imagePullPolicy</span>:<span style="color:#bbb"> </span>Always<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">#   nodeSelector:</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">#     nn: sp</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#0e84b5;font-weight:bold">---</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">apiVersion</span>:<span style="color:#bbb"> </span>networking.k8s.io/v1<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">kind</span>:<span style="color:#bbb"> </span>Ingress<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">metadata</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>org-domain-blog-ingress<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">annotations</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">cert-manager.io/cluster-issuer</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;letsencrypt-prod&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">nginx.ingress.kubernetes.io/proxy-send-timeout</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3600&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">nginx.ingress.kubernetes.io/proxy-read-timeout</span>:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;3600&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#062873;font-weight:bold">spec</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">ingressClassName</span>:<span style="color:#bbb"> </span>nginx<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">tls</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- <span style="color:#062873;font-weight:bold">hosts</span>:<span style="color:#bbb"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#34;*.domain.org&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span>- <span style="color:#4070a0">&#34;blog.domain.org&#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">secretName</span>:<span style="color:#bbb"> </span>tls<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span><span style="color:#062873;font-weight:bold">rules</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">  </span>- <span style="color:#062873;font-weight:bold">host</span>:<span style="color:#bbb"> </span>blog.domain.org<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">    </span><span style="color:#062873;font-weight:bold">http</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span><span style="color:#062873;font-weight:bold">paths</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">      </span>- <span style="color:#062873;font-weight:bold">path</span>:<span style="color:#bbb"> </span>/<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">pathType</span>:<span style="color:#bbb"> </span>Prefix<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#062873;font-weight:bold">backend</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">          </span><span style="color:#062873;font-weight:bold">service</span>:<span style="color:#bbb"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#062873;font-weight:bold">name</span>:<span style="color:#bbb"> </span>org-domain-blog<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">            </span><span style="color:#062873;font-weight:bold">port</span>:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">              </span><span style="color:#062873;font-weight:bold">number</span>:<span style="color:#bbb"> </span><span style="color:#40a070">80</span><span style="color:#bbb">
+</span></span></span></code></pre></div><p>The image on Docker Hub is public. I may buy a larger server later so I can keep a private image.</p>
 
 </content>
 

@@ -48,7 +48,7 @@ Too many people use the CNAME trick. It breaks often.
 I skip the SaaS setup. Plenty of guides exist. The DNS part is enough.">
   <meta itemprop="datePublished" content="2024-02-22T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-02-22T00:00:00+00:00">
-  <meta itemprop="wordCount" content="468">
+  <meta itemprop="wordCount" content="465">
   <meta itemprop="keywords" content="Notes">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -243,168 +243,162 @@ I skip the SaaS setup. Plenty of guides exist. The DNS part is enough.">
 <p>Then I saw a NodeSeek user with an API that picks a better Cloudflare IP. I used that API plus the official Cloudflare API, and set the DNS A record myself.</p>
 <p>Too many people use the CNAME trick. It breaks often.</p>
 <p>I skip the SaaS setup. Plenty of guides exist. The DNS part is enough.</p>
-<pre tabindex="0"><code> curl --request GET \
-  --url https://api.cloudflare.com/client/v4/zones/your_zoneid/dns_records \
-  --header &#39;Content-Type: application/json&#39; \
-  --header &#39;X-Auth-Email: your email&#39; \
-  --header &#39;X-Auth-Key: your key&#39;
-
-// config.json
-
-{
-  &#34;url&#34;: &#34;https://vps789.com/vps/sum/cfIpTop20&#34;,
-  &#34;email&#34;: &#34;&#34;,
-  &#34;key&#34;: &#34;&#34;,
-  &#34;zone_id&#34;: &#34;&#34;,
-  &#34;dns_id&#34;: &#34;&#34;,
-  &#34;domain&#34;: &#34;&#34;,
-  &#34;telegram_bot_token&#34;: &#34;&#34;,
-  &#34;chat_id&#34;: &#34;&#34;
-}
-</code></pre><pre tabindex="0"><code>import requests
-import schedule
-import ipaddress
-import time
-import json
-import os
-
-cf_networks = [
-    &#34;173.245.48.0/20&#34;,
-    &#34;103.21.244.0/22&#34;,
-    &#34;103.22.200.0/22&#34;,
-    &#34;103.31.4.0/22&#34;,
-    &#34;141.101.64.0/18&#34;,
-    &#34;108.162.192.0/18&#34;,
-    &#34;190.93.240.0/20&#34;,
-    &#34;188.114.96.0/20&#34;,
-    &#34;197.234.240.0/22&#34;,
-    &#34;198.41.128.0/17&#34;,
-    &#34;162.158.0.0/15&#34;,
-    &#34;104.16.0.0/13&#34;,
-    &#34;104.24.0.0/14&#34;,
-    &#34;172.64.0.0/13&#34;,
-    &#34;131.0.72.0/22&#34;
-]
-
-def load_config():
-    with open(&#34;config.json&#34;, &#34;r&#34;) as file:
-        return json.load(file)
-
-def save_last_ip(ip):
-    with open(&#34;last_ip.txt&#34;, &#34;w&#34;) as file:
-        file.write(ip)
-
-def load_last_ip():
-    if os.path.exists(&#34;last_ip.txt&#34;):
-        with open(&#34;last_ip.txt&#34;, &#34;r&#34;) as file:
-            return file.read()
-    else:
-        return &#34;&#34;
-
-def is_ip_in_cf(ip, networks):
-    ip_address = ipaddress.ip_address(ip)
-    
-    for network in networks:
-        network_obj = ipaddress.ip_network(network, strict=False)
-        if ip_address in network_obj:
-            return True  
-    
-    return False
-
-def send_telegram_message(config, message):
-    if config[&#39;telegram_bot_token&#39;] and config[&#39;chat_id&#39;]:
-        telegram_url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34;
-        telegram_data = {&#34;chat_id&#34;: config[&#39;chat_id&#39;], &#34;text&#34;: message}
-        try:
-            requests.post(telegram_url, data=telegram_data)
-        except Exception as e:
-            print(f&#34;Failed to send Telegram message: {e}&#34;)
-
-def get_third_party_data(url, retries=3, delay=120):
-    for i in range(retries):
-        try:
-            response = requests.get(url)
-            response.raise_for_status()  
-            return response.json()
-        except Exception as e:
-            print(f&#34;Attempt {i + 1} failed: {e}&#34;)
-            time.sleep(delay)
-    return None
-
-def get_and_validate_data(url, config, retries=3, delay=120):
-    data = get_third_party_data(url, retries, delay)
-    if not data:
-        send_telegram_message(config, &#34;Failed to get data after several retries.&#34;)
-        return None 
-      
-    try:
-        first_ip = data[&#39;data&#39;][&#39;good&#39;][0][&#39;ip&#39;]
-        if not first_ip:
-            raise ValueError(&#34;IP address is empty.&#34;)
-    except (KeyError, IndexError, ValueError) as e:
-        send_telegram_message(config, f&#34;Data format is invalid or changed: {e}&#34;)
-        return None 
-
-    if not is_ip_in_cf(first_ip, cf_networks):
-        ## send_telegram_message(config, f&#34;The IP address {first_ip} is NOT within the cf&#34;)
-        print(f&#34;The IP address {first_ip} is NOT within the cf&#34;)
-        return None
-
-    return first_ip 
-
-def update_a_and_notify():
-    config = load_config()
-    last_ip = load_last_ip()
-
-    first_ip = get_and_validate_data(config[&#39;url&#39;], config)
-    if not first_ip:
-        return  # Terminate when data acquisition fails or is in an incorrect format
-
-    # Skip update if IP address has not changed
-    if first_ip == last_ip:
-        print(&#34;IP address has not changed, skip update,&#34;)
-        return
-  
-    # Update locally stored IP address
-    save_last_ip(first_ip)
-
-    # Cloudflare API settings
-    headers = {
-        &#34;X-Auth-Email&#34;: config[&#39;email&#39;],
-        &#34;X-Auth-Key&#34;: config[&#39;key&#39;],
-        &#34;Content-Type&#34;: &#34;application/json&#34;
-    }
-
-    cloudflare_api_url = f&#34;https://api.cloudflare.com/client/v4/zones/{config[&#39;zone_id&#39;]}/dns_records/{config[&#39;dns_id&#39;]}&#34;
-    payload = {
-        &#34;type&#34;: &#34;A&#34;,
-        &#34;name&#34;: config[&#39;domain&#39;],
-        &#34;content&#34;: first_ip,
-        &#34;ttl&#34;: 120,
-    }
-
-    # Update A record
-    update_response = requests.put(cloudflare_api_url, json=payload, headers=headers)
-    if update_response.status_code == 200:
-        message = f&#34;Successful Domain Renewal {config[&#39;domain&#39;]} A to {first_ip}&#34;
-    else:
-        message = f&#34;Failed to update  A record for domain {config[&#39;domain&#39;]} : {update_response.text}&#34;
-
-    print(message)
-
-# Timed task settings
-schedule.every(1).minutes.do(update_a_and_notify)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
-</code></pre><pre><code>                [#cloudflare](/blog/?q=cloudflare)
-            
-                [#network](/blog/?q=network)
-            
-                [#notes](/blog/?q=notes)
-</code></pre>
-
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span> curl --request GET <span style="color:#4070a0;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#4070a0;font-weight:bold"></span>  --url https://api.cloudflare.com/client/v4/zones/your_zoneid/dns_records <span style="color:#4070a0;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#4070a0;font-weight:bold"></span>  --header <span style="color:#4070a0">&#39;Content-Type: application/json&#39;</span> <span style="color:#4070a0;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#4070a0;font-weight:bold"></span>  --header <span style="color:#4070a0">&#39;X-Auth-Email: your email&#39;</span> <span style="color:#4070a0;font-weight:bold">\
+</span></span></span><span style="display:flex;"><span><span style="color:#4070a0;font-weight:bold"></span>  --header <span style="color:#4070a0">&#39;X-Auth-Key: your key&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>// config.json
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#666">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;url&#34;</span>: <span style="color:#4070a0">&#34;https://vps789.com/vps/sum/cfIpTop20&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;email&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;key&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;zone_id&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;dns_id&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;domain&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;telegram_bot_token&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#4070a0">&#34;chat_id&#34;</span>: <span style="color:#4070a0">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#666">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">requests</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">schedule</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">ipaddress</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">time</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">json</span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">import</span> <span style="color:#0e84b5;font-weight:bold">os</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>cf_networks <span style="color:#666">=</span> [
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;173.245.48.0/20&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;103.21.244.0/22&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;103.22.200.0/22&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;103.31.4.0/22&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;141.101.64.0/18&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;108.162.192.0/18&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;190.93.240.0/20&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;188.114.96.0/20&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;197.234.240.0/22&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;198.41.128.0/17&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;162.158.0.0/15&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;104.16.0.0/13&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;104.24.0.0/14&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;172.64.0.0/13&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#4070a0">&#34;131.0.72.0/22&#34;</span>
+</span></span><span style="display:flex;"><span>]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">load_config</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">with</span> <span style="color:#007020">open</span>(<span style="color:#4070a0">&#34;config.json&#34;</span>, <span style="color:#4070a0">&#34;r&#34;</span>) <span style="color:#007020;font-weight:bold">as</span> file:
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span> json<span style="color:#666">.</span>load(file)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">save_last_ip</span>(ip):
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">with</span> <span style="color:#007020">open</span>(<span style="color:#4070a0">&#34;last_ip.txt&#34;</span>, <span style="color:#4070a0">&#34;w&#34;</span>) <span style="color:#007020;font-weight:bold">as</span> file:
+</span></span><span style="display:flex;"><span>        file<span style="color:#666">.</span>write(ip)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">load_last_ip</span>():
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> os<span style="color:#666">.</span>path<span style="color:#666">.</span>exists(<span style="color:#4070a0">&#34;last_ip.txt&#34;</span>):
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">with</span> <span style="color:#007020">open</span>(<span style="color:#4070a0">&#34;last_ip.txt&#34;</span>, <span style="color:#4070a0">&#34;r&#34;</span>) <span style="color:#007020;font-weight:bold">as</span> file:
+</span></span><span style="display:flex;"><span>            <span style="color:#007020;font-weight:bold">return</span> file<span style="color:#666">.</span>read()
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span> <span style="color:#4070a0">&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">is_ip_in_cf</span>(ip, networks):
+</span></span><span style="display:flex;"><span>    ip_address <span style="color:#666">=</span> ipaddress<span style="color:#666">.</span>ip_address(ip)
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">for</span> network <span style="color:#007020;font-weight:bold">in</span> networks:
+</span></span><span style="display:flex;"><span>        network_obj <span style="color:#666">=</span> ipaddress<span style="color:#666">.</span>ip_network(network, strict<span style="color:#666">=</span><span style="color:#007020;font-weight:bold">False</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">if</span> ip_address <span style="color:#007020;font-weight:bold">in</span> network_obj:
+</span></span><span style="display:flex;"><span>            <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">True</span>  
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">False</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">send_telegram_message</span>(config, message):
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> config[<span style="color:#4070a0">&#39;telegram_bot_token&#39;</span>] <span style="color:#007020;font-weight:bold">and</span> config[<span style="color:#4070a0">&#39;chat_id&#39;</span>]:
+</span></span><span style="display:flex;"><span>        telegram_url <span style="color:#666">=</span> <span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;https://api.telegram.org/bot</span><span style="color:#70a0d0">{</span>config[<span style="color:#4070a0">&#39;telegram_bot_token&#39;</span>]<span style="color:#70a0d0">}</span><span style="color:#4070a0">/sendMessage&#34;</span>
+</span></span><span style="display:flex;"><span>        telegram_data <span style="color:#666">=</span> {<span style="color:#4070a0">&#34;chat_id&#34;</span>: config[<span style="color:#4070a0">&#39;chat_id&#39;</span>], <span style="color:#4070a0">&#34;text&#34;</span>: message}
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>            requests<span style="color:#666">.</span>post(telegram_url, data<span style="color:#666">=</span>telegram_data)
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">except</span> <span style="color:#007020">Exception</span> <span style="color:#007020;font-weight:bold">as</span> e:
+</span></span><span style="display:flex;"><span>            <span style="color:#007020">print</span>(<span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;Failed to send Telegram message: </span><span style="color:#70a0d0">{</span>e<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">get_third_party_data</span>(url, retries<span style="color:#666">=</span><span style="color:#40a070">3</span>, delay<span style="color:#666">=</span><span style="color:#40a070">120</span>):
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">for</span> i <span style="color:#007020;font-weight:bold">in</span> <span style="color:#007020">range</span>(retries):
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>            response <span style="color:#666">=</span> requests<span style="color:#666">.</span>get(url)
+</span></span><span style="display:flex;"><span>            response<span style="color:#666">.</span>raise_for_status()  
+</span></span><span style="display:flex;"><span>            <span style="color:#007020;font-weight:bold">return</span> response<span style="color:#666">.</span>json()
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">except</span> <span style="color:#007020">Exception</span> <span style="color:#007020;font-weight:bold">as</span> e:
+</span></span><span style="display:flex;"><span>            <span style="color:#007020">print</span>(<span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;Attempt </span><span style="color:#70a0d0">{</span>i <span style="color:#666">+</span> <span style="color:#40a070">1</span><span style="color:#70a0d0">}</span><span style="color:#4070a0"> failed: </span><span style="color:#70a0d0">{</span>e<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span>)
+</span></span><span style="display:flex;"><span>            time<span style="color:#666">.</span>sleep(delay)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">get_and_validate_data</span>(url, config, retries<span style="color:#666">=</span><span style="color:#40a070">3</span>, delay<span style="color:#666">=</span><span style="color:#40a070">120</span>):
+</span></span><span style="display:flex;"><span>    data <span style="color:#666">=</span> get_third_party_data(url, retries, delay)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> <span style="color:#007020;font-weight:bold">not</span> data:
+</span></span><span style="display:flex;"><span>        send_telegram_message(config, <span style="color:#4070a0">&#34;Failed to get data after several retries.&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">None</span> 
+</span></span><span style="display:flex;"><span>      
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">try</span>:
+</span></span><span style="display:flex;"><span>        first_ip <span style="color:#666">=</span> data[<span style="color:#4070a0">&#39;data&#39;</span>][<span style="color:#4070a0">&#39;good&#39;</span>][<span style="color:#40a070">0</span>][<span style="color:#4070a0">&#39;ip&#39;</span>]
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">if</span> <span style="color:#007020;font-weight:bold">not</span> first_ip:
+</span></span><span style="display:flex;"><span>            <span style="color:#007020;font-weight:bold">raise</span> <span style="color:#007020">ValueError</span>(<span style="color:#4070a0">&#34;IP address is empty.&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">except</span> (<span style="color:#007020">KeyError</span>, <span style="color:#007020">IndexError</span>, <span style="color:#007020">ValueError</span>) <span style="color:#007020;font-weight:bold">as</span> e:
+</span></span><span style="display:flex;"><span>        send_telegram_message(config, <span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;Data format is invalid or changed: </span><span style="color:#70a0d0">{</span>e<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">None</span> 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> <span style="color:#007020;font-weight:bold">not</span> is_ip_in_cf(first_ip, cf_networks):
+</span></span><span style="display:flex;"><span>        <span style="color:#60a0b0;font-style:italic">## send_telegram_message(config, f&#34;The IP address {first_ip} is NOT within the cf&#34;)</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">print</span>(<span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;The IP address </span><span style="color:#70a0d0">{</span>first_ip<span style="color:#70a0d0">}</span><span style="color:#4070a0"> is NOT within the cf&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> first_ip 
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">def</span> <span style="color:#06287e">update_a_and_notify</span>():
+</span></span><span style="display:flex;"><span>    config <span style="color:#666">=</span> load_config()
+</span></span><span style="display:flex;"><span>    last_ip <span style="color:#666">=</span> load_last_ip()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    first_ip <span style="color:#666">=</span> get_and_validate_data(config[<span style="color:#4070a0">&#39;url&#39;</span>], config)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> <span style="color:#007020;font-weight:bold">not</span> first_ip:
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span>  <span style="color:#60a0b0;font-style:italic"># Terminate when data acquisition fails or is in an incorrect format</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#60a0b0;font-style:italic"># Skip update if IP address has not changed</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> first_ip <span style="color:#666">==</span> last_ip:
+</span></span><span style="display:flex;"><span>        <span style="color:#007020">print</span>(<span style="color:#4070a0">&#34;IP address has not changed, skip update,&#34;</span>)
+</span></span><span style="display:flex;"><span>        <span style="color:#007020;font-weight:bold">return</span>
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>    <span style="color:#60a0b0;font-style:italic"># Update locally stored IP address</span>
+</span></span><span style="display:flex;"><span>    save_last_ip(first_ip)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#60a0b0;font-style:italic"># Cloudflare API settings</span>
+</span></span><span style="display:flex;"><span>    headers <span style="color:#666">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;X-Auth-Email&#34;</span>: config[<span style="color:#4070a0">&#39;email&#39;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;X-Auth-Key&#34;</span>: config[<span style="color:#4070a0">&#39;key&#39;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;Content-Type&#34;</span>: <span style="color:#4070a0">&#34;application/json&#34;</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    cloudflare_api_url <span style="color:#666">=</span> <span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;https://api.cloudflare.com/client/v4/zones/</span><span style="color:#70a0d0">{</span>config[<span style="color:#4070a0">&#39;zone_id&#39;</span>]<span style="color:#70a0d0">}</span><span style="color:#4070a0">/dns_records/</span><span style="color:#70a0d0">{</span>config[<span style="color:#4070a0">&#39;dns_id&#39;</span>]<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span>
+</span></span><span style="display:flex;"><span>    payload <span style="color:#666">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;type&#34;</span>: <span style="color:#4070a0">&#34;A&#34;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;name&#34;</span>: config[<span style="color:#4070a0">&#39;domain&#39;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;content&#34;</span>: first_ip,
+</span></span><span style="display:flex;"><span>        <span style="color:#4070a0">&#34;ttl&#34;</span>: <span style="color:#40a070">120</span>,
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#60a0b0;font-style:italic"># Update A record</span>
+</span></span><span style="display:flex;"><span>    update_response <span style="color:#666">=</span> requests<span style="color:#666">.</span>put(cloudflare_api_url, json<span style="color:#666">=</span>payload, headers<span style="color:#666">=</span>headers)
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">if</span> update_response<span style="color:#666">.</span>status_code <span style="color:#666">==</span> <span style="color:#40a070">200</span>:
+</span></span><span style="display:flex;"><span>        message <span style="color:#666">=</span> <span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;Successful Domain Renewal </span><span style="color:#70a0d0">{</span>config[<span style="color:#4070a0">&#39;domain&#39;</span>]<span style="color:#70a0d0">}</span><span style="color:#4070a0"> A to </span><span style="color:#70a0d0">{</span>first_ip<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">else</span>:
+</span></span><span style="display:flex;"><span>        message <span style="color:#666">=</span> <span style="color:#4070a0">f</span><span style="color:#4070a0">&#34;Failed to update  A record for domain </span><span style="color:#70a0d0">{</span>config[<span style="color:#4070a0">&#39;domain&#39;</span>]<span style="color:#70a0d0">}</span><span style="color:#4070a0"> : </span><span style="color:#70a0d0">{</span>update_response<span style="color:#666">.</span>text<span style="color:#70a0d0">}</span><span style="color:#4070a0">&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#007020">print</span>(message)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"># Timed task settings</span>
+</span></span><span style="display:flex;"><span>schedule<span style="color:#666">.</span>every(<span style="color:#40a070">1</span>)<span style="color:#666">.</span>minutes<span style="color:#666">.</span>do(update_a_and_notify)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">while</span> <span style="color:#007020;font-weight:bold">True</span>:
+</span></span><span style="display:flex;"><span>    schedule<span style="color:#666">.</span>run_pending()
+</span></span><span style="display:flex;"><span>    time<span style="color:#666">.</span>sleep(<span style="color:#40a070">1</span>)
+</span></span></code></pre></div>
 </content>
 
 <p>

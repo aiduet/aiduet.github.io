@@ -69,7 +69,7 @@ I called it ecc. Layout:
 . |-- cmd | `-- ecc.go |-- configs | |-- cfg.go | `-- cfg.yaml |-- data |-- internal | `-- importing |-- pkg | |-- files | |-- mongo | `-- mysql |-- tools | `-- print.go |-- go.mod |-- go.sum |-- LICENSE |-- README.en.md `-- README.md ecc.go The CLI uses github.com/urfave/cli/v2.">
   <meta itemprop="datePublished" content="2021-05-12T00:00:00+00:00">
   <meta itemprop="dateModified" content="2021-05-12T00:00:00+00:00">
-  <meta itemprop="wordCount" content="875">
+  <meta itemprop="wordCount" content="872">
   <meta itemprop="keywords" content="Notes">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -263,81 +263,81 @@ I called it ecc. Layout:
   <p>Need: import Excel files into MongoDB and MySQL in batches.</p>
 <p>Work was in Go, so I wrote this in Go too. Colleagues can change it.</p>
 <p>I called it <code>ecc</code>. Layout:</p>
-<pre tabindex="0"><code>.
-|-- cmd
-|   `-- ecc.go
-|-- configs
-|   |-- cfg.go
-|   `-- cfg.yaml
-|-- data
-|-- internal
-|   `-- importing
-|-- pkg
-|   |-- files
-|   |-- mongo
-|   `-- mysql
-|-- tools
-|    `-- print.go
-|-- go.mod
-|-- go.sum
-|-- LICENSE
-|-- README.en.md
-`-- README.md
-</code></pre><h3 id="eccgo">ecc.go</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-text" data-lang="text"><span style="display:flex;"><span>.
+</span></span><span style="display:flex;"><span>|-- cmd
+</span></span><span style="display:flex;"><span>|   `-- ecc.go
+</span></span><span style="display:flex;"><span>|-- configs
+</span></span><span style="display:flex;"><span>|   |-- cfg.go
+</span></span><span style="display:flex;"><span>|   `-- cfg.yaml
+</span></span><span style="display:flex;"><span>|-- data
+</span></span><span style="display:flex;"><span>|-- internal
+</span></span><span style="display:flex;"><span>|   `-- importing
+</span></span><span style="display:flex;"><span>|-- pkg
+</span></span><span style="display:flex;"><span>|   |-- files
+</span></span><span style="display:flex;"><span>|   |-- mongo
+</span></span><span style="display:flex;"><span>|   `-- mysql
+</span></span><span style="display:flex;"><span>|-- tools
+</span></span><span style="display:flex;"><span>|    `-- print.go
+</span></span><span style="display:flex;"><span>|-- go.mod
+</span></span><span style="display:flex;"><span>|-- go.sum
+</span></span><span style="display:flex;"><span>|-- LICENSE
+</span></span><span style="display:flex;"><span>|-- README.en.md
+</span></span><span style="display:flex;"><span>`-- README.md
+</span></span></code></pre></div><h3 id="eccgo">ecc.go</h3>
 <p>The CLI uses <a href="https://github.com/urfave/cli/v2">github.com/urfave/cli/v2</a>.</p>
 <p>Main flag: <code>dir</code> — the folder of Excel files.</p>
-<pre tabindex="0"><code>func main() {
-
-	var err error
-	var model string
-	dir := DirPath
-	app := &amp;cli.App{
-		Name:  &#34;Ecc&#34;,
-		Usage: &#34;Ecc is a tools for batch processing of excel data&#34;,
-		Flags: []cli.Flag{
-			&amp;cli.StringFlag{
-				Name:        &#34;model&#34;,
-				Aliases:     []string{&#34;m&#34;},
-				Usage:       &#34;The model of searching&#34;,
-				Value:       &#34;model&#34;,
-				Destination: &amp;model,
-			},
-			&amp;cli.StringFlag{
-				Name:        &#34;dir&#34;,
-				Aliases:     []string{&#34;d&#34;},
-				Usage:       &#34;Folder location of data files&#34;,
-				Destination: &amp;dir,
-				Value:       DirPath,
-			},
-		},
-		Action: func(c *cli.Context) error {
-			importing.Load(&#34;../configs/cfg.yaml&#34;)
-			importing.Handle(dir)
-			return nil
-		},
-	}
-
-	err = app.Run(os.Args)
-	if err != nil {
-		log.Fatal(err)
-	}
-}
-</code></pre><p>Flags set options. Action runs the job. It loads the DB config first.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">func</span><span style="color:#bbb"> </span><span style="color:#06287e">main</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#902000">error</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>model<span style="color:#bbb"> </span><span style="color:#902000">string</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>dir<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>DirPath<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>app<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#666">&amp;</span>cli.App{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Name:<span style="color:#bbb">  </span><span style="color:#4070a0">&#34;Ecc&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Usage:<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;Ecc is a tools for batch processing of excel data&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Flags:<span style="color:#bbb"> </span>[]cli.Flag{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#666">&amp;</span>cli.StringFlag{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Name:<span style="color:#bbb">        </span><span style="color:#4070a0">&#34;model&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Aliases:<span style="color:#bbb">     </span>[]<span style="color:#902000">string</span>{<span style="color:#4070a0">&#34;m&#34;</span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Usage:<span style="color:#bbb">       </span><span style="color:#4070a0">&#34;The model of searching&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Value:<span style="color:#bbb">       </span><span style="color:#4070a0">&#34;model&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Destination:<span style="color:#bbb"> </span><span style="color:#666">&amp;</span>model,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#666">&amp;</span>cli.StringFlag{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Name:<span style="color:#bbb">        </span><span style="color:#4070a0">&#34;dir&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Aliases:<span style="color:#bbb">     </span>[]<span style="color:#902000">string</span>{<span style="color:#4070a0">&#34;d&#34;</span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Usage:<span style="color:#bbb">       </span><span style="color:#4070a0">&#34;Folder location of data files&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Destination:<span style="color:#bbb"> </span><span style="color:#666">&amp;</span>dir,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>Value:<span style="color:#bbb">       </span>DirPath,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Action:<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">func</span>(c<span style="color:#bbb"> </span><span style="color:#666">*</span>cli.Context)<span style="color:#bbb"> </span><span style="color:#902000">error</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>importing.<span style="color:#06287e">Load</span>(<span style="color:#4070a0">&#34;../configs/cfg.yaml&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>importing.<span style="color:#06287e">Handle</span>(dir)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>},<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>err<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>app.<span style="color:#06287e">Run</span>(os.Args)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#666">!=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>log.<span style="color:#06287e">Fatal</span>(err)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Flags set options. Action runs the job. It loads the DB config first.</p>
 <p>I only used MySQL and MongoDB. Redis for cache was dropped.</p>
 <h3 id="cfggo">cfg.go</h3>
-<pre tabindex="0"><code>type Config struct {
-	Env   string `yaml:&#34;env&#34;`
-	Mongo struct {
-		DNS        string `yaml:&#34;dns&#34;`
-		Db         string `yaml:&#34;db&#34;`
-		Collection string `yaml:&#34;collection&#34;`
-	} `yaml:&#34;mongo&#34;`
-	Mysql struct {
-		Alias string `yaml:&#34;alias&#34;`
-		Dns   string `yaml:&#34;dns&#34;`
-	} `yaml:&#34;mysql&#34;`
-}
-</code></pre><p>Config is read with <a href="https://github.com/spf13/viper">github.com/spf13/viper</a>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">type</span><span style="color:#bbb"> </span>Config<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>Env<span style="color:#bbb">   </span><span style="color:#902000">string</span><span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;env&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>Mongo<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>DNS<span style="color:#bbb">        </span><span style="color:#902000">string</span><span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;dns&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Db<span style="color:#bbb">         </span><span style="color:#902000">string</span><span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;db&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Collection<span style="color:#bbb"> </span><span style="color:#902000">string</span><span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;collection&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;mongo&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>Mysql<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Alias<span style="color:#bbb"> </span><span style="color:#902000">string</span><span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;alias&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Dns<span style="color:#bbb">   </span><span style="color:#902000">string</span><span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;dns&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb"> </span><span style="color:#4070a0">`yaml:&#34;mysql&#34;`</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Config is read with <a href="https://github.com/spf13/viper">github.com/spf13/viper</a>.</p>
 <p>The core is <code>importing.Handle()</code>.</p>
 <p>A common path: one goroutine per file to read, then write in another — or write each row as you read.</p>
 <p>Here every run must check <strong>all</strong> Excel files in the folder first. If one file is bad, stop.</p>
@@ -348,184 +348,179 @@ I called it ecc. Layout:
 </ol>
 <p>I picked (2). The set is small. The files (crawled data) are often messy.</p>
 <h3 id="handle">handle()</h3>
-<pre tabindex="0"><code>var (
-	rWait   = true
-	wWait   = true
-	rDone   = make(chan struct{})
-	rCrash  = make(chan struct{})
-	wDone   = make(chan struct{})
-	wCrash  = make(chan struct{})
-	once    = &amp;sync.Once{}
-	wg      = &amp;sync.WaitGroup{}
-        // command-line progress bar
-	pb      = mpb.New(mpb.WithWaitGroup(wg), mpb.WithWidth(ProcessBarWidth)) 
-)
-
-...
-
-func Handle(dir string) {
-	var err error
-	var f []os.FileInfo
-	var data = &amp;sync.Map{}
-
-	if f, err = files.ReadDir(dir); err != nil {
-		abort(&#34;-&gt; Failure: &#34; + err.Error())
-		return
-	}
-
-	read(f, dir, data)
-	for rWait {
-		select {
-		case &lt;-rCrash:
-			abort(&#34;-&gt; Failure&#34;)
-			return
-		case &lt;-rDone:
-			rWait = false
-		}
-	}
-
-	write2mongo(data)
-	for wWait {
-		select {
-		case &lt;-wCrash:
-			abort(&#34;-&gt; Failure&#34;)
-			return
-		case &lt;-wDone:
-			wWait = false
-		}
-	}
-
-	pb.Wait()
-
-	tools.Yellow(&#34;-&gt; Whether to sync data to mysql? (y/n)&#34;)
-	if !tools.Scan(&#34;aborted&#34;) {
-		return
-	} else {
-		tools.Yellow(&#34;-&gt; Syncing data to mysql...&#34;)
-		if err = write2mysql(); err != nil {
-			tools.Red(&#34;-&gt; Failure：&#34; + err.Error())
-		} else {
-			tools.Green(&#34;-&gt; Success.&#34;)
-		}
-	}
-}
-</code></pre><p><code>rCrash</code> means a check failed. Close it to stop all readers. <code>rDone</code> means all files were read. Write uses the same idea.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>(<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>rWait<span style="color:#bbb">   </span>=<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">true</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>wWait<span style="color:#bbb">   </span>=<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">true</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>rDone<span style="color:#bbb">   </span>=<span style="color:#bbb"> </span><span style="color:#007020">make</span>(<span style="color:#007020;font-weight:bold">chan</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span>{})<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>rCrash<span style="color:#bbb">  </span>=<span style="color:#bbb"> </span><span style="color:#007020">make</span>(<span style="color:#007020;font-weight:bold">chan</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span>{})<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>wDone<span style="color:#bbb">   </span>=<span style="color:#bbb"> </span><span style="color:#007020">make</span>(<span style="color:#007020;font-weight:bold">chan</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span>{})<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>wCrash<span style="color:#bbb">  </span>=<span style="color:#bbb"> </span><span style="color:#007020">make</span>(<span style="color:#007020;font-weight:bold">chan</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">struct</span>{})<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>once<span style="color:#bbb">    </span>=<span style="color:#bbb"> </span><span style="color:#666">&amp;</span>sync.Once{}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>wg<span style="color:#bbb">      </span>=<span style="color:#bbb"> </span><span style="color:#666">&amp;</span>sync.WaitGroup{}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">        </span><span style="color:#60a0b0;font-style:italic">// command-line progress bar</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>pb<span style="color:#bbb">      </span>=<span style="color:#bbb"> </span>mpb.<span style="color:#06287e">New</span>(mpb.<span style="color:#06287e">WithWaitGroup</span>(wg),<span style="color:#bbb"> </span>mpb.<span style="color:#06287e">WithWidth</span>(ProcessBarWidth))<span style="color:#bbb"> 
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#666">...</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">func</span><span style="color:#bbb"> </span><span style="color:#06287e">Handle</span>(dir<span style="color:#bbb"> </span><span style="color:#902000">string</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#902000">error</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>f<span style="color:#bbb"> </span>[]os.FileInfo<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>data<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#666">&amp;</span>sync.Map{}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>f,<span style="color:#bbb"> </span>err<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>files.<span style="color:#06287e">ReadDir</span>(dir);<span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#666">!=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#06287e">abort</span>(<span style="color:#4070a0">&#34;-&gt; Failure: &#34;</span><span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>err.<span style="color:#06287e">Error</span>())<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#06287e">read</span>(f,<span style="color:#bbb"> </span>dir,<span style="color:#bbb"> </span>data)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>rWait<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">case</span><span style="color:#bbb"> </span><span style="color:#666">&lt;-</span>rCrash:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#06287e">abort</span>(<span style="color:#4070a0">&#34;-&gt; Failure&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">case</span><span style="color:#bbb"> </span><span style="color:#666">&lt;-</span>rDone:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>rWait<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">false</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#06287e">write2mongo</span>(data)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>wWait<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">case</span><span style="color:#bbb"> </span><span style="color:#666">&lt;-</span>wCrash:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#06287e">abort</span>(<span style="color:#4070a0">&#34;-&gt; Failure&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">case</span><span style="color:#bbb"> </span><span style="color:#666">&lt;-</span>wDone:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>wWait<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">false</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>pb.<span style="color:#06287e">Wait</span>()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>tools.<span style="color:#06287e">Yellow</span>(<span style="color:#4070a0">&#34;-&gt; Whether to sync data to mysql? (y/n)&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>!tools.<span style="color:#06287e">Scan</span>(<span style="color:#4070a0">&#34;aborted&#34;</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>tools.<span style="color:#06287e">Yellow</span>(<span style="color:#4070a0">&#34;-&gt; Syncing data to mysql...&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>err<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#06287e">write2mysql</span>();<span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#666">!=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>tools.<span style="color:#06287e">Red</span>(<span style="color:#4070a0">&#34;-&gt; Failure：&#34;</span><span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>err.<span style="color:#06287e">Error</span>())<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>tools.<span style="color:#06287e">Green</span>(<span style="color:#4070a0">&#34;-&gt; Success.&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p><code>rCrash</code> means a check failed. Close it to stop all readers. <code>rDone</code> means all files were read. Write uses the same idea.</p>
 <h3 id="read">read()</h3>
-<pre tabindex="0"><code>func read(fs []os.FileInfo, dir string, data *sync.Map) {
-	for _, file := range fs {
-		fileName := file.Name()
-		_ext := filepath.Ext(fileName)
-		if Include(strings.Split(Exts, &#34;,&#34;), _ext) {
-			wg.Add(1)
-			inCh := make(chan File)
-			go func() {
-				defer wg.Done()
-				select {
-				case &lt;-rCrash:
-					return // exit
-				case f := &lt;-inCh:
-					e, preData := ReadExcel(f.FilePath, f.FileName, pb)
-					if e != nil {
-						tools.Red(&#34;%v&#34;, e)
-						once.Do(func() {
-							close(rCrash)
-						})
-						return
-					}
-					data.Store(f.FileName, preData)
-				}
-			}()
-			go func() {
-				inCh &lt;- File{
-					FileName: fileName,
-					FilePath: dir + string(os.PathSeparator) + fileName,
-				}
-			}()
-		}
-	}
-
-	go func() {
-		wg.Wait()
-		close(rDone)
-	}()
-}
-</code></pre><p>Send file info into <code>inCh</code>. <code>ReadExcel()</code> checks and parses. On error, close <code>rCrash</code>. If it is fine, store it in <code>sync.Map</code>.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">func</span><span style="color:#bbb"> </span><span style="color:#06287e">read</span>(fs<span style="color:#bbb"> </span>[]os.FileInfo,<span style="color:#bbb"> </span>dir<span style="color:#bbb"> </span><span style="color:#902000">string</span>,<span style="color:#bbb"> </span>data<span style="color:#bbb"> </span><span style="color:#666">*</span>sync.Map)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>_,<span style="color:#bbb"> </span>file<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">range</span><span style="color:#bbb"> </span>fs<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>fileName<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>file.<span style="color:#06287e">Name</span>()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>_ext<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>filepath.<span style="color:#06287e">Ext</span>(fileName)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span><span style="color:#06287e">Include</span>(strings.<span style="color:#06287e">Split</span>(Exts,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;,&#34;</span>),<span style="color:#bbb"> </span>_ext)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>wg.<span style="color:#06287e">Add</span>(<span style="color:#40a070">1</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>inCh<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#007020">make</span>(<span style="color:#007020;font-weight:bold">chan</span><span style="color:#bbb"> </span>File)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">go</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">func</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span><span style="color:#007020;font-weight:bold">defer</span><span style="color:#bbb"> </span>wg.<span style="color:#06287e">Done</span>()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span><span style="color:#007020;font-weight:bold">select</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span><span style="color:#007020;font-weight:bold">case</span><span style="color:#bbb"> </span><span style="color:#666">&lt;-</span>rCrash:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic">// exit</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span><span style="color:#007020;font-weight:bold">case</span><span style="color:#bbb"> </span>f<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#666">&lt;-</span>inCh:<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span>e,<span style="color:#bbb"> </span>preData<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#06287e">ReadExcel</span>(f.FilePath,<span style="color:#bbb"> </span>f.FileName,<span style="color:#bbb"> </span>pb)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>e<span style="color:#bbb"> </span><span style="color:#666">!=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">						</span>tools.<span style="color:#06287e">Red</span>(<span style="color:#4070a0">&#34;%v&#34;</span>,<span style="color:#bbb"> </span>e)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">						</span>once.<span style="color:#06287e">Do</span>(<span style="color:#007020;font-weight:bold">func</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">							</span><span style="color:#007020">close</span>(rCrash)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">						</span>})<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">						</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span>data.<span style="color:#06287e">Store</span>(f.FileName,<span style="color:#bbb"> </span>preData)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>}()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">go</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">func</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>inCh<span style="color:#bbb"> </span><span style="color:#666">&lt;-</span><span style="color:#bbb"> </span>File{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span>FileName:<span style="color:#bbb"> </span>fileName,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span>FilePath:<span style="color:#bbb"> </span>dir<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span><span style="color:#007020">string</span>(os.PathSeparator)<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>fileName,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>}()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">go</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">func</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>wg.<span style="color:#06287e">Wait</span>()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020">close</span>(rDone)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>Send file info into <code>inCh</code>. <code>ReadExcel()</code> checks and parses. On error, close <code>rCrash</code>. If it is fine, store it in <code>sync.Map</code>.</p>
 <p>Excel is read with <a href="https://github.com/xuri/excelize/v2">github.com/xuri/excelize/v2</a>:</p>
 <h3 id="read_excel">read_excel()</h3>
-<pre tabindex="0"><code>func ReadExcel(filePath, fileName string, pb *mpb.Progress) (err error, pre *ExcelPre) {
-	f, err := excelize.OpenFile(filePath)
-	if err != nil {
-		return err, nil
-	}
-
-	defer func() {
-		if _e := f.Close(); _e != nil {
-			fmt.Printf(&#34;%s: %v.\n\n&#34;, filePath, _e)
-		}
-	}()
-
-	// Get the first sheet.
-	firstSheet := f.WorkBook.Sheets.Sheet[0].Name
-	rows, err := f.GetRows(firstSheet)
-	lRows := len(rows)
-
-	if lRows &lt; 2 {
-		lRows = 2
-	}
-
-	rb := ReadBar(lRows, filePath, pb)
-	wb := WriteBar(lRows-2, filePath, rb, pb)
-
-	// The first line is the field name.
-	var fields []string
-
-	// The data of the file.
-	var data [][]string
-
-	InCr := func(start time.Time) {
-		rb.Increment()
-		rb.DecoratorEwmaUpdate(time.Since(start))
-	}
-
-	for i := 0; i &lt; lRows; i++ {
-		InCr(time.Now())
-		if i == 0 {
-			fields = rows[i]
-			for index, field := range fields {
-				if isChinese := regexp.MustCompile(&#34;[\u4e00-\u9fa5]&#34;); isChinese.MatchString(field) || field == &#34;&#34; {
-					err = errors.New(fmt.Sprintf(&#34;%s: line 【A%d】 field 【%s】 \n&#34;, filePath, index, field) + &#34;The first line of the file is not a valid attribute name.&#34;)
-					return err, nil
-				}
-
-				// other rules
-			}
-			continue
-		}
-
-		if i == 1 {
-			continue
-		}
-
-		data = append(data, rows[i])
-	}
-
-	return nil, &amp;ExcelPre{
-		FileName:    fileName,
-		Data:        data,
-		Fields:      fields,
-		Prefixes:    Prefix(fileName),
-		ProgressBar: wb,
-	}
-}
-</code></pre><p>This also drives the CLI progress bar, plus a few rules. If there are many rules, make an interface and compose them.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">func</span><span style="color:#bbb"> </span><span style="color:#06287e">ReadExcel</span>(filePath,<span style="color:#bbb"> </span>fileName<span style="color:#bbb"> </span><span style="color:#902000">string</span>,<span style="color:#bbb"> </span>pb<span style="color:#bbb"> </span><span style="color:#666">*</span>mpb.Progress)<span style="color:#bbb"> </span>(err<span style="color:#bbb"> </span><span style="color:#902000">error</span>,<span style="color:#bbb"> </span>pre<span style="color:#bbb"> </span><span style="color:#666">*</span>ExcelPre)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>f,<span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>excelize.<span style="color:#06287e">OpenFile</span>(filePath)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#666">!=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>err,<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">defer</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">func</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>_e<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>f.<span style="color:#06287e">Close</span>();<span style="color:#bbb"> </span>_e<span style="color:#bbb"> </span><span style="color:#666">!=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>fmt.<span style="color:#06287e">Printf</span>(<span style="color:#4070a0">&#34;%s: %v.\n\n&#34;</span>,<span style="color:#bbb"> </span>filePath,<span style="color:#bbb"> </span>_e)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#60a0b0;font-style:italic">// Get the first sheet.</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>firstSheet<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>f.WorkBook.Sheets.Sheet[<span style="color:#40a070">0</span>].Name<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>rows,<span style="color:#bbb"> </span>err<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>f.<span style="color:#06287e">GetRows</span>(firstSheet)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>lRows<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#007020">len</span>(rows)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>lRows<span style="color:#bbb"> </span>&lt;<span style="color:#bbb"> </span><span style="color:#40a070">2</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>lRows<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#40a070">2</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>rb<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#06287e">ReadBar</span>(lRows,<span style="color:#bbb"> </span>filePath,<span style="color:#bbb"> </span>pb)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>wb<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#06287e">WriteBar</span>(lRows<span style="color:#666">-</span><span style="color:#40a070">2</span>,<span style="color:#bbb"> </span>filePath,<span style="color:#bbb"> </span>rb,<span style="color:#bbb"> </span>pb)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#60a0b0;font-style:italic">// The first line is the field name.</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>fields<span style="color:#bbb"> </span>[]<span style="color:#902000">string</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#60a0b0;font-style:italic">// The data of the file.</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">var</span><span style="color:#bbb"> </span>data<span style="color:#bbb"> </span>[][]<span style="color:#902000">string</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>InCr<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">func</span>(start<span style="color:#bbb"> </span>time.Time)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>rb.<span style="color:#06287e">Increment</span>()<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>rb.<span style="color:#06287e">DecoratorEwmaUpdate</span>(time.<span style="color:#06287e">Since</span>(start))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#40a070">0</span>;<span style="color:#bbb"> </span>i<span style="color:#bbb"> </span>&lt;<span style="color:#bbb"> </span>lRows;<span style="color:#bbb"> </span>i<span style="color:#666">++</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#06287e">InCr</span>(time.<span style="color:#06287e">Now</span>())<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">==</span><span style="color:#bbb"> </span><span style="color:#40a070">0</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>fields<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>rows[i]<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>index,<span style="color:#bbb"> </span>field<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">range</span><span style="color:#bbb"> </span>fields<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>isChinese<span style="color:#bbb"> </span><span style="color:#666">:=</span><span style="color:#bbb"> </span>regexp.<span style="color:#06287e">MustCompile</span>(<span style="color:#4070a0">&#34;[\u4e00-\u9fa5]&#34;</span>);<span style="color:#bbb"> </span>isChinese.<span style="color:#06287e">MatchString</span>(field)<span style="color:#bbb"> </span><span style="color:#666">||</span><span style="color:#bbb"> </span>field<span style="color:#bbb"> </span><span style="color:#666">==</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;&#34;</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span>err<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span>errors.<span style="color:#06287e">New</span>(fmt.<span style="color:#06287e">Sprintf</span>(<span style="color:#4070a0">&#34;%s: line 【A%d】 field 【%s】 \n&#34;</span>,<span style="color:#bbb"> </span>filePath,<span style="color:#bbb"> </span>index,<span style="color:#bbb"> </span>field)<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;The first line of the file is not a valid attribute name.&#34;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">					</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>err,<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">				</span><span style="color:#60a0b0;font-style:italic">// other rules</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">continue</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">==</span><span style="color:#bbb"> </span><span style="color:#40a070">1</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">			</span><span style="color:#007020;font-weight:bold">continue</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>data<span style="color:#bbb"> </span>=<span style="color:#bbb"> </span><span style="color:#007020">append</span>(data,<span style="color:#bbb"> </span>rows[i])<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">nil</span>,<span style="color:#bbb"> </span><span style="color:#666">&amp;</span>ExcelPre{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>FileName:<span style="color:#bbb">    </span>fileName,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Data:<span style="color:#bbb">        </span>data,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Fields:<span style="color:#bbb">      </span>fields,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>Prefixes:<span style="color:#bbb">    </span><span style="color:#06287e">Prefix</span>(fileName),<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">		</span>ProgressBar:<span style="color:#bbb"> </span>wb,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb">	</span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div><p>This also drives the CLI progress bar, plus a few rules. If there are many rules, make an interface and compose them.</p>
 <p>The rest is normal DB work. I skip that code.</p>
 <p>A run screenshot is lost.</p>
 <p><em>Update, Jan 2022: the job got more custom. We moved it to a web app.</em></p>
-<p><a href="/blog/?q=excel">#excel</a></p>
-<pre><code>                [#go](/blog/?q=go)
-            
-                [#notes](/blog/?q=notes)
-</code></pre>
 
 </content>
 

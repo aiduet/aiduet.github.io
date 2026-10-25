@@ -60,7 +60,7 @@ See: https://chromium.googlesource.com/chromium/src.git/&#43;/HEAD/docs/ios/user
 Safari also showed the pop-up. iOS Safari and macOS Safari UAs differ a bit. This check fixed it:">
   <meta itemprop="datePublished" content="2024-01-11T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-01-11T00:00:00+00:00">
-  <meta itemprop="wordCount" content="242">
+  <meta itemprop="wordCount" content="239">
   <meta itemprop="keywords" content="Notes">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -258,62 +258,56 @@ Safari also showed the pop-up. iOS Safari and macOS Safari UAs differ a bit. Thi
 <p>That is Chrome on iOS. It reports as <code>CriOS</code>.</p>
 <p>See: <a href="https://chromium.googlesource.com/chromium/src.git/+/HEAD/docs/ios/user_agent.md">https://chromium.googlesource.com/chromium/src.git/+/HEAD/docs/ios/user_agent.md</a></p>
 <p>Safari also showed the pop-up. iOS Safari and macOS Safari UAs differ a bit. This check fixed it:</p>
-<pre tabindex="0"><code>function isSupportedBrowser() {
-  const ua = navigator.userAgent;
-  const macSafariRegex = /Version\/(\d+).*Safari/;
-  const iosVersionRegex = /OS (\d+)_/;
-  const chromeRegex = /Chrome\/(\d+)|CriOS\/(\d+)/;
-  const firefoxRegex = /Firefox\/(\d+)/;
-  const edgeRegex = /Edg\/(\d+)/;
-  const operaRegex = /Opera\/(\d+)/;
-  const criosRegex = /CriOS\/(\d+)/;
-
-  // macOS Safari
-  if (ua.includes(&#39;Macintosh&#39;) &amp;&amp; ua.includes(&#39;Safari&#39;) &amp;&amp; !ua.includes(&#39;Chrome&#39;) &amp;&amp; !ua.includes(&#39;Edg&#39;)) {
-    const match = ua.match(macSafariRegex);
-    return match &amp;&amp; parseInt(match[1], 10) &gt;= 16;
-  }
-
-  // iOS Safari
-  if ((ua.includes(&#39;iPhone&#39;) || ua.includes(&#39;iPad&#39;) || ua.includes(&#39;iPod&#39;)) &amp;&amp; ua.includes(&#39;Safari&#39;) &amp;&amp; !ua.includes(&#39;CriOS&#39;) &amp;&amp; !ua.includes(&#39;Edg&#39;)) {
-    const match = ua.match(iosVersionRegex);
-    return match &amp;&amp; parseInt(match[1], 10) &gt;= 16;
-  }
-
-  // Chrome or Chrome on iOS (CriOS)
-  let match = ua.match(chromeRegex);
-  if (match) {
-    const version = parseInt(match[1] || match[2], 10);
-    return version &gt;= 110;
-  }
-
-  // Edge
-  match = ua.match(edgeRegex);
-  if (match) {
-    return parseInt(match[1], 10) &gt;= 110;
-  }
-
-  // Firefox
-  match = ua.match(firefoxRegex);
-  if (match) {
-    return parseInt(match[1], 10) &gt;= 113;
-  }
-
-  // Opera
-  match = ua.match(operaRegex);
-  if (match) {
-    return parseInt(match[1], 10) &gt;= 102;
-  }
-  
-  return false;
-}
-</code></pre><pre><code>                [#blog](/blog/?q=blog)
-            
-                [#css](/blog/?q=css)
-            
-                [#notes](/blog/?q=notes)
-</code></pre>
-
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#007020;font-weight:bold">function</span> isSupportedBrowser() {
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> ua <span style="color:#666">=</span> navigator.userAgent;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> macSafariRegex <span style="color:#666">=</span> <span style="color:#235388">/Version\/(\d+).*Safari/</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> iosVersionRegex <span style="color:#666">=</span> <span style="color:#235388">/OS (\d+)_/</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> chromeRegex <span style="color:#666">=</span> <span style="color:#235388">/Chrome\/(\d+)|CriOS\/(\d+)/</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> firefoxRegex <span style="color:#666">=</span> <span style="color:#235388">/Firefox\/(\d+)/</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> edgeRegex <span style="color:#666">=</span> <span style="color:#235388">/Edg\/(\d+)/</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> operaRegex <span style="color:#666">=</span> <span style="color:#235388">/Opera\/(\d+)/</span>;
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">const</span> criosRegex <span style="color:#666">=</span> <span style="color:#235388">/CriOS\/(\d+)/</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#60a0b0;font-style:italic">// macOS Safari
+</span></span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"></span>  <span style="color:#007020;font-weight:bold">if</span> (ua.includes(<span style="color:#4070a0">&#39;Macintosh&#39;</span>) <span style="color:#666">&amp;&amp;</span> ua.includes(<span style="color:#4070a0">&#39;Safari&#39;</span>) <span style="color:#666">&amp;&amp;</span> <span style="color:#666">!</span>ua.includes(<span style="color:#4070a0">&#39;Chrome&#39;</span>) <span style="color:#666">&amp;&amp;</span> <span style="color:#666">!</span>ua.includes(<span style="color:#4070a0">&#39;Edg&#39;</span>)) {
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">const</span> match <span style="color:#666">=</span> ua.match(macSafariRegex);
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> match <span style="color:#666">&amp;&amp;</span> <span style="color:#007020">parseInt</span>(match[<span style="color:#40a070">1</span>], <span style="color:#40a070">10</span>) <span style="color:#666">&gt;=</span> <span style="color:#40a070">16</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#60a0b0;font-style:italic">// iOS Safari
+</span></span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"></span>  <span style="color:#007020;font-weight:bold">if</span> ((ua.includes(<span style="color:#4070a0">&#39;iPhone&#39;</span>) <span style="color:#666">||</span> ua.includes(<span style="color:#4070a0">&#39;iPad&#39;</span>) <span style="color:#666">||</span> ua.includes(<span style="color:#4070a0">&#39;iPod&#39;</span>)) <span style="color:#666">&amp;&amp;</span> ua.includes(<span style="color:#4070a0">&#39;Safari&#39;</span>) <span style="color:#666">&amp;&amp;</span> <span style="color:#666">!</span>ua.includes(<span style="color:#4070a0">&#39;CriOS&#39;</span>) <span style="color:#666">&amp;&amp;</span> <span style="color:#666">!</span>ua.includes(<span style="color:#4070a0">&#39;Edg&#39;</span>)) {
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">const</span> match <span style="color:#666">=</span> ua.match(iosVersionRegex);
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> match <span style="color:#666">&amp;&amp;</span> <span style="color:#007020">parseInt</span>(match[<span style="color:#40a070">1</span>], <span style="color:#40a070">10</span>) <span style="color:#666">&gt;=</span> <span style="color:#40a070">16</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#60a0b0;font-style:italic">// Chrome or Chrome on iOS (CriOS)
+</span></span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"></span>  <span style="color:#007020;font-weight:bold">let</span> match <span style="color:#666">=</span> ua.match(chromeRegex);
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">if</span> (match) {
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">const</span> version <span style="color:#666">=</span> <span style="color:#007020">parseInt</span>(match[<span style="color:#40a070">1</span>] <span style="color:#666">||</span> match[<span style="color:#40a070">2</span>], <span style="color:#40a070">10</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> version <span style="color:#666">&gt;=</span> <span style="color:#40a070">110</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#60a0b0;font-style:italic">// Edge
+</span></span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"></span>  match <span style="color:#666">=</span> ua.match(edgeRegex);
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">if</span> (match) {
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020">parseInt</span>(match[<span style="color:#40a070">1</span>], <span style="color:#40a070">10</span>) <span style="color:#666">&gt;=</span> <span style="color:#40a070">110</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#60a0b0;font-style:italic">// Firefox
+</span></span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"></span>  match <span style="color:#666">=</span> ua.match(firefoxRegex);
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">if</span> (match) {
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020">parseInt</span>(match[<span style="color:#40a070">1</span>], <span style="color:#40a070">10</span>) <span style="color:#666">&gt;=</span> <span style="color:#40a070">113</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  <span style="color:#60a0b0;font-style:italic">// Opera
+</span></span></span><span style="display:flex;"><span><span style="color:#60a0b0;font-style:italic"></span>  match <span style="color:#666">=</span> ua.match(operaRegex);
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">if</span> (match) {
+</span></span><span style="display:flex;"><span>    <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020">parseInt</span>(match[<span style="color:#40a070">1</span>], <span style="color:#40a070">10</span>) <span style="color:#666">&gt;=</span> <span style="color:#40a070">102</span>;
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span>  
+</span></span><span style="display:flex;"><span>  <span style="color:#007020;font-weight:bold">return</span> <span style="color:#007020;font-weight:bold">false</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div>
 </content>
 
 <p>

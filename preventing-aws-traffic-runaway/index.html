@@ -72,11 +72,6 @@ schedule.every(15).seconds.do(check_traffic_and_notify, config)
 while True:
     schedule.run_pending()
     time.sleep(1)
-                [#aws](/blog/?q=aws)
-            
-                [#cloudflare](/blog/?q=cloudflare)
-            
-                [#notes](/blog/?q=notes)
 " />
 <meta name="keywords" content="notes," />
 
@@ -85,7 +80,7 @@ while True:
   <meta property="og:site_name" content="Duet">
   <meta property="og:title" content="Preventing AWS traffic runaway">
   <meta property="og:description" content="I use a free AWS box as a reverse proxy. To keep the traffic quota, I wrote a small script. If usage goes over a limit, it pings a Telegram bot.
-### config.json # { # &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;, # &#34;chat_id&#34;: &#34;xxxx&#34;, # &#34;monthly_limit_gb&#34;: 100 # } import json import requests import schedule import time import psutil from datetime import datetime def load_config(): with open(&#34;config.json&#34;, &#34;r&#34;) as file: return json.load(file) def log_initial_traffic_usage(): today = datetime.now() if today.day == 1: # Check if it is the first day of the month net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: total_bytes_initial = net_io.bytes_sent &#43; net_io.bytes_recv print(f&#39;{total_bytes_initial}&#39;) with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file: file.write(f&#34;{total_bytes_initial}\n&#34;) def get_current_month_usage(): try: with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file: initial_bytes = int(file.readline().strip()) net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: current_total_bytes = net_io.bytes_sent &#43; net_io.bytes_recv used_bytes = current_total_bytes - initial_bytes used_gb = used_bytes / (1024**3) # Convert to GB return used_gb except FileNotFoundError: print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;) return None def send_telegram_message(message, config): url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34; data = { &#34;chat_id&#34;: config[&#34;chat_id&#34;], &#34;text&#34;: message } requests.post(url, data=data) def check_traffic_and_notify(config): used_gb = get_current_month_usage() print(f&#39;Already used: {used_gb} GB&#39;) if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]: send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config) config = load_config() schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage) schedule.every(15).seconds.do(check_traffic_and_notify, config) while True: schedule.run_pending() time.sleep(1) [#aws](/blog/?q=aws) [#cloudflare](/blog/?q=cloudflare) [#notes](/blog/?q=notes)">
+### config.json # { # &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;, # &#34;chat_id&#34;: &#34;xxxx&#34;, # &#34;monthly_limit_gb&#34;: 100 # } import json import requests import schedule import time import psutil from datetime import datetime def load_config(): with open(&#34;config.json&#34;, &#34;r&#34;) as file: return json.load(file) def log_initial_traffic_usage(): today = datetime.now() if today.day == 1: # Check if it is the first day of the month net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: total_bytes_initial = net_io.bytes_sent &#43; net_io.bytes_recv print(f&#39;{total_bytes_initial}&#39;) with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file: file.write(f&#34;{total_bytes_initial}\n&#34;) def get_current_month_usage(): try: with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file: initial_bytes = int(file.readline().strip()) net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: current_total_bytes = net_io.bytes_sent &#43; net_io.bytes_recv used_bytes = current_total_bytes - initial_bytes used_gb = used_bytes / (1024**3) # Convert to GB return used_gb except FileNotFoundError: print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;) return None def send_telegram_message(message, config): url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34; data = { &#34;chat_id&#34;: config[&#34;chat_id&#34;], &#34;text&#34;: message } requests.post(url, data=data) def check_traffic_and_notify(config): used_gb = get_current_month_usage() print(f&#39;Already used: {used_gb} GB&#39;) if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]: send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config) config = load_config() schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage) schedule.every(15).seconds.do(check_traffic_and_notify, config) while True: schedule.run_pending() time.sleep(1)">
   <meta property="og:locale" content="en">
   <meta property="og:type" content="article">
     <meta property="article:section" content="blog">
@@ -99,17 +94,17 @@ while True:
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Preventing AWS traffic runaway">
   <meta name="twitter:description" content="I use a free AWS box as a reverse proxy. To keep the traffic quota, I wrote a small script. If usage goes over a limit, it pings a Telegram bot.
-### config.json # { # &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;, # &#34;chat_id&#34;: &#34;xxxx&#34;, # &#34;monthly_limit_gb&#34;: 100 # } import json import requests import schedule import time import psutil from datetime import datetime def load_config(): with open(&#34;config.json&#34;, &#34;r&#34;) as file: return json.load(file) def log_initial_traffic_usage(): today = datetime.now() if today.day == 1: # Check if it is the first day of the month net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: total_bytes_initial = net_io.bytes_sent &#43; net_io.bytes_recv print(f&#39;{total_bytes_initial}&#39;) with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file: file.write(f&#34;{total_bytes_initial}\n&#34;) def get_current_month_usage(): try: with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file: initial_bytes = int(file.readline().strip()) net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: current_total_bytes = net_io.bytes_sent &#43; net_io.bytes_recv used_bytes = current_total_bytes - initial_bytes used_gb = used_bytes / (1024**3) # Convert to GB return used_gb except FileNotFoundError: print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;) return None def send_telegram_message(message, config): url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34; data = { &#34;chat_id&#34;: config[&#34;chat_id&#34;], &#34;text&#34;: message } requests.post(url, data=data) def check_traffic_and_notify(config): used_gb = get_current_month_usage() print(f&#39;Already used: {used_gb} GB&#39;) if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]: send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config) config = load_config() schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage) schedule.every(15).seconds.do(check_traffic_and_notify, config) while True: schedule.run_pending() time.sleep(1) [#aws](/blog/?q=aws) [#cloudflare](/blog/?q=cloudflare) [#notes](/blog/?q=notes)">
+### config.json # { # &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;, # &#34;chat_id&#34;: &#34;xxxx&#34;, # &#34;monthly_limit_gb&#34;: 100 # } import json import requests import schedule import time import psutil from datetime import datetime def load_config(): with open(&#34;config.json&#34;, &#34;r&#34;) as file: return json.load(file) def log_initial_traffic_usage(): today = datetime.now() if today.day == 1: # Check if it is the first day of the month net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: total_bytes_initial = net_io.bytes_sent &#43; net_io.bytes_recv print(f&#39;{total_bytes_initial}&#39;) with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file: file.write(f&#34;{total_bytes_initial}\n&#34;) def get_current_month_usage(): try: with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file: initial_bytes = int(file.readline().strip()) net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: current_total_bytes = net_io.bytes_sent &#43; net_io.bytes_recv used_bytes = current_total_bytes - initial_bytes used_gb = used_bytes / (1024**3) # Convert to GB return used_gb except FileNotFoundError: print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;) return None def send_telegram_message(message, config): url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34; data = { &#34;chat_id&#34;: config[&#34;chat_id&#34;], &#34;text&#34;: message } requests.post(url, data=data) def check_traffic_and_notify(config): used_gb = get_current_month_usage() print(f&#39;Already used: {used_gb} GB&#39;) if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]: send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config) config = load_config() schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage) schedule.every(15).seconds.do(check_traffic_and_notify, config) while True: schedule.run_pending() time.sleep(1)">
 
 
 
 
   <meta itemprop="name" content="Preventing AWS traffic runaway">
   <meta itemprop="description" content="I use a free AWS box as a reverse proxy. To keep the traffic quota, I wrote a small script. If usage goes over a limit, it pings a Telegram bot.
-### config.json # { # &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;, # &#34;chat_id&#34;: &#34;xxxx&#34;, # &#34;monthly_limit_gb&#34;: 100 # } import json import requests import schedule import time import psutil from datetime import datetime def load_config(): with open(&#34;config.json&#34;, &#34;r&#34;) as file: return json.load(file) def log_initial_traffic_usage(): today = datetime.now() if today.day == 1: # Check if it is the first day of the month net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: total_bytes_initial = net_io.bytes_sent &#43; net_io.bytes_recv print(f&#39;{total_bytes_initial}&#39;) with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file: file.write(f&#34;{total_bytes_initial}\n&#34;) def get_current_month_usage(): try: with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file: initial_bytes = int(file.readline().strip()) net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: current_total_bytes = net_io.bytes_sent &#43; net_io.bytes_recv used_bytes = current_total_bytes - initial_bytes used_gb = used_bytes / (1024**3) # Convert to GB return used_gb except FileNotFoundError: print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;) return None def send_telegram_message(message, config): url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34; data = { &#34;chat_id&#34;: config[&#34;chat_id&#34;], &#34;text&#34;: message } requests.post(url, data=data) def check_traffic_and_notify(config): used_gb = get_current_month_usage() print(f&#39;Already used: {used_gb} GB&#39;) if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]: send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config) config = load_config() schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage) schedule.every(15).seconds.do(check_traffic_and_notify, config) while True: schedule.run_pending() time.sleep(1) [#aws](/blog/?q=aws) [#cloudflare](/blog/?q=cloudflare) [#notes](/blog/?q=notes)">
+### config.json # { # &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;, # &#34;chat_id&#34;: &#34;xxxx&#34;, # &#34;monthly_limit_gb&#34;: 100 # } import json import requests import schedule import time import psutil from datetime import datetime def load_config(): with open(&#34;config.json&#34;, &#34;r&#34;) as file: return json.load(file) def log_initial_traffic_usage(): today = datetime.now() if today.day == 1: # Check if it is the first day of the month net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: total_bytes_initial = net_io.bytes_sent &#43; net_io.bytes_recv print(f&#39;{total_bytes_initial}&#39;) with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file: file.write(f&#34;{total_bytes_initial}\n&#34;) def get_current_month_usage(): try: with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file: initial_bytes = int(file.readline().strip()) net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;) if net_io: current_total_bytes = net_io.bytes_sent &#43; net_io.bytes_recv used_bytes = current_total_bytes - initial_bytes used_gb = used_bytes / (1024**3) # Convert to GB return used_gb except FileNotFoundError: print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;) return None def send_telegram_message(message, config): url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34; data = { &#34;chat_id&#34;: config[&#34;chat_id&#34;], &#34;text&#34;: message } requests.post(url, data=data) def check_traffic_and_notify(config): used_gb = get_current_month_usage() print(f&#39;Already used: {used_gb} GB&#39;) if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]: send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config) config = load_config() schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage) schedule.every(15).seconds.do(check_traffic_and_notify, config) while True: schedule.run_pending() time.sleep(1)">
   <meta itemprop="datePublished" content="2024-03-23T00:00:00+00:00">
   <meta itemprop="dateModified" content="2024-03-23T00:00:00+00:00">
-  <meta itemprop="wordCount" content="219">
+  <meta itemprop="wordCount" content="216">
   <meta itemprop="keywords" content="Notes">
 <meta name="referrer" content="no-referrer-when-downgrade" />
 
@@ -301,77 +296,71 @@ while True:
 
 <content>
   <p>I use a free AWS box as a reverse proxy. To keep the traffic quota, I wrote a small script. If usage goes over a limit, it pings a Telegram bot.</p>
-<pre tabindex="0"><code>### config.json
-# {
-#   &#34;telegram_bot_token&#34;: &#34;xxxxx:xxxxxxx&#34;,
-#   &#34;chat_id&#34;: &#34;xxxx&#34;,
-#   &#34;monthly_limit_gb&#34;: 100
-# }
-
-import json
-import requests
-import schedule
-import time
-import psutil
-from datetime import datetime
-
-def load_config():
-    with open(&#34;config.json&#34;, &#34;r&#34;) as file:
-        return json.load(file)
-
-def log_initial_traffic_usage():
-    today = datetime.now()
-    if today.day == 1:  # Check if it is the first day of the month
-        net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;)
-        if net_io:
-            total_bytes_initial = net_io.bytes_sent + net_io.bytes_recv
-            print(f&#39;{total_bytes_initial}&#39;)
-            with open(&#34;traffic_usage.txt&#34;, &#34;w&#34;) as file:
-                file.write(f&#34;{total_bytes_initial}\n&#34;)
-
-def get_current_month_usage():
-    try:
-        with open(&#34;traffic_usage.txt&#34;, &#34;r&#34;) as file:
-            initial_bytes = int(file.readline().strip())
-            net_io = psutil.net_io_counters(pernic=True).get(&#39;ens5&#39;)
-            if net_io:
-                current_total_bytes = net_io.bytes_sent + net_io.bytes_recv
-                used_bytes = current_total_bytes - initial_bytes
-                used_gb = used_bytes / (1024**3)  # Convert to GB
-                return used_gb
-    except FileNotFoundError:
-        print(&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;)
-        return None
-
-def send_telegram_message(message, config):
-    url = f&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34;
-    data = {
-        &#34;chat_id&#34;: config[&#34;chat_id&#34;],
-        &#34;text&#34;: message
-    }
-    requests.post(url, data=data)
-
-def check_traffic_and_notify(config):
-    used_gb = get_current_month_usage()
-    print(f&#39;Already used: {used_gb} GB&#39;)
-    if used_gb is not None and used_gb &gt; config[&#34;monthly_limit_gb&#34;]:
-        send_telegram_message(f&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;, config)
-
-config = load_config()
-
-schedule.every().day.at(&#34;00:01&#34;).do(log_initial_traffic_usage)
-schedule.every(15).seconds.do(check_traffic_and_notify, config)
-
-while True:
-    schedule.run_pending()
-    time.sleep(1)
-</code></pre><pre><code>                [#aws](/blog/?q=aws)
-            
-                [#cloudflare](/blog/?q=cloudflare)
-            
-                [#notes](/blog/?q=notes)
-</code></pre>
-
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span><span style="">###</span> <span style="">config.json</span>
+</span></span><span style="display:flex;"><span><span style="">#</span> {
+</span></span><span style="display:flex;"><span><span style="">#</span>   <span style="color:#062873;font-weight:bold">&#34;telegram_bot_token&#34;</span>: <span style="color:#4070a0">&#34;xxxxx:xxxxxxx&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="">#</span>   <span style="color:#062873;font-weight:bold">&#34;chat_id&#34;</span>: <span style="color:#4070a0">&#34;xxxx&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="">#</span>   <span style="color:#062873;font-weight:bold">&#34;monthly_limit_gb&#34;</span>: <span style="color:#40a070">100</span>
+</span></span><span style="display:flex;"><span><span style="">#</span> }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">import</span> <span style="">json</span>
+</span></span><span style="display:flex;"><span><span style="">import</span> <span style="">requests</span>
+</span></span><span style="display:flex;"><span><span style="">import</span> <span style="">schedule</span>
+</span></span><span style="display:flex;"><span><span style="">import</span> <span style="">time</span>
+</span></span><span style="display:flex;"><span><span style="">import</span> <span style="">psutil</span>
+</span></span><span style="display:flex;"><span><span style="">from</span> <span style="">datetime</span> <span style="">import</span> <span style="">datetime</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">def</span> <span style="">load_config():</span>
+</span></span><span style="display:flex;"><span>    <span style="">with</span> <span style="">open(</span><span style="color:#4070a0">&#34;config.json&#34;</span><span style="">,</span> <span style="color:#4070a0">&#34;r&#34;</span><span style="">)</span> <span style="">as</span> <span style="">file:</span>
+</span></span><span style="display:flex;"><span>        <span style="">return</span> <span style="">json.load(file)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">def</span> <span style="">log_initial_traffic_usage():</span>
+</span></span><span style="display:flex;"><span>    <span style="">today</span> <span style="">=</span> <span style="">datetime.now()</span>
+</span></span><span style="display:flex;"><span>    <span style="">if</span> <span style="">today.day</span> <span style="">==</span> <span style="color:#40a070">1</span><span style="">:</span>  <span style="">#</span> <span style="">Check</span> <span style="">if</span> <span style="">it</span> <span style="">is</span> <span style="">the</span> <span style="">first</span> <span style="">day</span> <span style="">of</span> <span style="">the</span> <span style="">month</span>
+</span></span><span style="display:flex;"><span>        <span style="">net_io</span> <span style="">=</span> <span style="">psutil.net_io_counters(pernic=True).get(&#39;ens</span><span style="color:#40a070">5</span><span style="">&#39;)</span>
+</span></span><span style="display:flex;"><span>        <span style="">if</span> <span style="">net_io:</span>
+</span></span><span style="display:flex;"><span>            <span style="">total_bytes_initial</span> <span style="">=</span> <span style="">net_io.bytes_sent</span> <span style="">+</span> <span style="">net_io.bytes_recv</span>
+</span></span><span style="display:flex;"><span>            <span style="">print(f&#39;</span>{<span style="">total_bytes_initial</span>}<span style="">&#39;)</span>
+</span></span><span style="display:flex;"><span>            <span style="">with</span> <span style="">open(</span><span style="color:#4070a0">&#34;traffic_usage.txt&#34;</span><span style="">,</span> <span style="color:#4070a0">&#34;w&#34;</span><span style="">)</span> <span style="">as</span> <span style="">file:</span>
+</span></span><span style="display:flex;"><span>                <span style="">file.write(f</span><span style="color:#4070a0">&#34;{total_bytes_initial}\n&#34;</span><span style="">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">def</span> <span style="">get_current_month_usage():</span>
+</span></span><span style="display:flex;"><span>    <span style="">try:</span>
+</span></span><span style="display:flex;"><span>        <span style="">with</span> <span style="">open(</span><span style="color:#4070a0">&#34;traffic_usage.txt&#34;</span><span style="">,</span> <span style="color:#4070a0">&#34;r&#34;</span><span style="">)</span> <span style="">as</span> <span style="">file:</span>
+</span></span><span style="display:flex;"><span>            <span style="">initial_bytes</span> <span style="">=</span> <span style="">int(file.readline().strip())</span>
+</span></span><span style="display:flex;"><span>            <span style="">net_io</span> <span style="">=</span> <span style="">psutil.net_io_counters(pernic=True).get(&#39;ens</span><span style="color:#40a070">5</span><span style="">&#39;)</span>
+</span></span><span style="display:flex;"><span>            <span style="">if</span> <span style="">net_io:</span>
+</span></span><span style="display:flex;"><span>                <span style="">current_total_bytes</span> <span style="">=</span> <span style="">net_io.bytes_sent</span> <span style="">+</span> <span style="">net_io.bytes_recv</span>
+</span></span><span style="display:flex;"><span>                <span style="">used_bytes</span> <span style="">=</span> <span style="">current_total_bytes</span> <span style="">-</span> <span style="">initial_bytes</span>
+</span></span><span style="display:flex;"><span>                <span style="">used_gb</span> <span style="">=</span> <span style="">used_bytes</span> <span style="">/</span> <span style="">(</span><span style="color:#40a070">1024</span><span style="">**</span><span style="color:#40a070">3</span><span style="">)</span>  <span style="">#</span> <span style="">Convert</span> <span style="">to</span> <span style="">GB</span>
+</span></span><span style="display:flex;"><span>                <span style="">return</span> <span style="">used_gb</span>
+</span></span><span style="display:flex;"><span>    <span style="">except</span> <span style="">FileNotFoundError:</span>
+</span></span><span style="display:flex;"><span>        <span style="">print(</span><span style="color:#4070a0">&#34;Initial traffic usage file not found. Make sure it&#39;s generated at the beginning of the month.&#34;</span><span style="">)</span>
+</span></span><span style="display:flex;"><span>        <span style="">return</span> <span style="">None</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">def</span> <span style="">send_telegram_message(message,</span> <span style="">config):</span>
+</span></span><span style="display:flex;"><span>    <span style="">url</span> <span style="">=</span> <span style="">f</span><span style="color:#4070a0">&#34;https://api.telegram.org/bot{config[&#39;telegram_bot_token&#39;]}/sendMessage&#34;</span>
+</span></span><span style="display:flex;"><span>    <span style="">data</span> <span style="">=</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#062873;font-weight:bold">&#34;chat_id&#34;</span>: <span style="">config</span>[<span style="color:#4070a0">&#34;chat_id&#34;</span>],
+</span></span><span style="display:flex;"><span>        <span style="color:#062873;font-weight:bold">&#34;text&#34;</span>: <span style="">message</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="">requests.post(url,</span> <span style="">data=data)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">def</span> <span style="">check_traffic_and_notify(config):</span>
+</span></span><span style="display:flex;"><span>    <span style="">used_gb</span> <span style="">=</span> <span style="">get_current_month_usage()</span>
+</span></span><span style="display:flex;"><span>    <span style="">print(f&#39;Already</span> <span style="">used:</span> {<span style="">used_gb</span>} <span style="">GB&#39;)</span>
+</span></span><span style="display:flex;"><span>    <span style="">if</span> <span style="">used_gb</span> <span style="">is</span> <span style="">not</span> <span style="">None</span> <span style="">and</span> <span style="">used_gb</span> <span style="">&gt;</span> <span style="">config</span>[<span style="color:#4070a0">&#34;monthly_limit_gb&#34;</span>]<span style="">:</span>
+</span></span><span style="display:flex;"><span>        <span style="">send_telegram_message(f</span><span style="color:#4070a0">&#34;Attention: Monthly traffic limit exceeded. Used: {used_gb:.2f} GB&#34;</span><span style="">,</span> <span style="">config)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">config</span> <span style="">=</span> <span style="">load_config()</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">schedule.every().day.at(</span><span style="color:#4070a0">&#34;00:01&#34;</span><span style="">).do(log_initial_traffic_usage)</span>
+</span></span><span style="display:flex;"><span><span style="">schedule.every(</span><span style="color:#40a070">15</span><span style="">).seconds.do(check_traffic_and_notify,</span> <span style="">config)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="">while</span> <span style="">True:</span>
+</span></span><span style="display:flex;"><span>    <span style="">schedule.run_pending()</span>
+</span></span><span style="display:flex;"><span>    <span style="">time.sleep(</span><span style="color:#40a070">1</span><span style="">)</span>
+</span></span></code></pre></div>
 </content>
 
 <p>
