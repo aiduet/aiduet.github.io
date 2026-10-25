@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Home on (｡･ω･｡)ﾉ♡ Tu</title>
+    <title>Home on Duet</title>
     <link>https://note.pp.ua/</link>
-    <description>Recent content in Home on (｡･ω･｡)ﾉ♡ Tu</description>
+    <description>Recent content in Home on Duet</description>
     <generator>Hugo</generator>
     <language>en</language>
     <lastBuildDate>Wed, 18 Mar 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://note.pp.ua/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>contact me</title>
+      <title>Contact</title>
       <link>https://note.pp.ua/contact/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://note.pp.ua/contact/</guid>
-      <description>&lt;p&gt;You can reach me in two places:&lt;/p&gt;&#xA;&lt;p&gt;For general mail and conversation, write to &lt;strong&gt;&lt;a href=&#34;mailto:opentu@hotmail.com&#34;&gt;opentu@hotmail.com&lt;/a&gt;&lt;/strong&gt;—that’s the inbox I check most often. For work, GitHub issues, or a technical note you want to push back on, send it to &lt;strong&gt;&lt;a href=&#34;mailto:hi@opentu.tech&#34;&gt;hi@opentu.tech&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;&#xA;&lt;p&gt;No need for a long preamble; just put what matters in the first line and link to whatever page or repo prompted the email. I reply as I read, without a fixed schedule.&lt;/p&gt;</description>
+      <description>&lt;p&gt;For work, write to &lt;a href=&#34;mailto:getduet@gmail.com&#34;&gt;getduet@gmail.com&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;For anything else, find me on &lt;a href=&#34;https://x.com/aiduet&#34;&gt;X&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Refactoring a messy Tieba bot</title>
